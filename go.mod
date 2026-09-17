@@ -1,4 +1,4 @@
-module github.com/invopop/gobl.facturae
+module github.com/invopop/gobl.es.facturae
 
 go 1.25.0
 

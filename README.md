@@ -6,8 +6,8 @@ Copyright [Invopop Ltd.](https://invopop.com) 2023. Released publicly under the 
 
 [![Lint](https://github.com/invopop/gobl.es.facturae/actions/workflows/lint.yaml/badge.svg)](https://github.com/invopop/gobl.es.facturae/actions/workflows/lint.yaml)
 [![Test Go](https://github.com/invopop/gobl.es.facturae/actions/workflows/test.yaml/badge.svg)](https://github.com/invopop/gobl.es.facturae/actions/workflows/test.yaml)
-[![Go Report Card](https://goreportcard.com/badge/github.com/invopop/gobl.facturae)](https://goreportcard.com/report/github.com/invopop/gobl.facturae)
-[![GoDoc](https://godoc.org/github.com/invopop/gobl.facturae?status.svg)](https://godoc.org/github.com/invopop/gobl.facturae)
+[![Go Report Card](https://goreportcard.com/badge/github.com/invopop/gobl.es.facturae)](https://goreportcard.com/report/github.com/invopop/gobl.es.facturae)
+[![GoDoc](https://godoc.org/github.com/invopop/gobl.es.facturae?status.svg)](https://godoc.org/github.com/invopop/gobl.es.facturae)
 ![Latest Tag](https://img.shields.io/github/v/tag/invopop/gobl.es.facturae)
 
 ## Usage
@@ -64,7 +64,7 @@ The command line interface is useful when working with languages other than Go.
 #### Installation
 
 ```bash
-go install github.com/invopop/gobl.facturae/cmd/gobl.facturae@latest
+go install github.com/invopop/gobl.es.facturae/cmd/gobl.facturae@latest
 ```
 
 #### Usage
