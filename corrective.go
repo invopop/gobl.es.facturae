@@ -81,9 +81,10 @@ func newCorrective(inv *bill.Invoice) *Corrective {
 	period := p.Period
 	if period == nil {
 		// if no period is given, use the issue date as base
+		start, end := *p.IssueDate, *p.IssueDate
 		period = &cal.Period{
-			Start: *p.IssueDate,
-			End:   *p.IssueDate,
+			Start: &start,
+			End:   &end,
 		}
 	}
 	c.TaxPeriod = newPeriodDates(period)

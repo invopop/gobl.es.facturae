@@ -1,11 +1,9 @@
 module github.com/invopop/gobl.facturae
 
-go 1.24.0
-
-toolchain go1.24.3
+go 1.25.0
 
 require (
-	github.com/invopop/gobl v0.403.0
+	github.com/invopop/gobl v0.507.0
 	github.com/invopop/xmldsig v0.14.0
 	github.com/lestrrat-go/libxml2 v0.0.0-20240905100032-c934e3fcb9d3
 	github.com/magefile/mage v1.15.0
@@ -36,6 +34,7 @@ require (
 	github.com/spf13/pflag v1.0.6 // indirect
 	go.yaml.in/yaml/v4 v4.0.0-rc.2 // indirect
 	golang.org/x/crypto v0.48.0 // indirect
+	golang.org/x/text v0.38.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	software.sslmate.com/src/go-pkcs12 v0.7.0 // indirect
 )
