@@ -17,6 +17,15 @@ func amount(a num.Amount) string {
 	return a.Rescale(2).String()
 }
 
+// optionalAmount renders an amount that GOBL leaves unset, which the Facturae
+// schema still expects as a figure. A missing amount is zero.
+func optionalAmount(a *num.Amount) string {
+	if a == nil {
+		return amount(num.AmountZero)
+	}
+	return amount(*a)
+}
+
 // makeAmount always provides an AmountType.
 func makeAmount(a num.Amount) Amount {
 	return Amount{

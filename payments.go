@@ -59,7 +59,7 @@ func newPaymentDetails(paymentInfo *bill.PaymentDetails) *PaymentDetails {
 	for i, installment := range terms.DueDates {
 		xmlInstallment := &Installment{
 			InstallmentDueDate:              installment.Date.String(),
-			InstallmentAmount:               amount(installment.Amount),
+			InstallmentAmount:               optionalAmount(installment.Amount),
 			PaymentMeans:                    facturaePaymentMethodCodes[instructions.Key],
 			CollectionAdditionalInformation: mergeNotes(paymentInfo.Terms.Notes, installment.Notes),
 		}
@@ -97,9 +97,9 @@ func newCreditBankAccount(info *pay.CreditTransfer) *BankAccount {
 		return nil
 	}
 	return &BankAccount{
-		IBAN:          info.IBAN,
-		BIC:           info.BIC,
-		AccountNumber: info.Number,
+		IBAN:          info.IBAN.String(),
+		BIC:           info.BIC.String(),
+		AccountNumber: info.Number.String(),
 	}
 }
 
