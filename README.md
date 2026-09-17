@@ -4,11 +4,11 @@ Convert GOBL documents into the Spain's FacturaE format.
 
 Copyright [Invopop Ltd.](https://invopop.com) 2023. Released publicly under the [Apache License Version 2.0](LICENSE). For commercial licenses please contact the [dev team at invopop](mailto:dev@invopop.com). In order to accept contributions to this library we will require transferring copyrights to Invopop Ltd.
 
-[![Lint](https://github.com/invopop/gobl.facturae/actions/workflows/lint.yaml/badge.svg)](https://github.com/invopop/gobl.facturae/actions/workflows/lint.yaml)
-[![Test Go](https://github.com/invopop/gobl.facturae/actions/workflows/test.yaml/badge.svg)](https://github.com/invopop/gobl.facturae/actions/workflows/test.yaml)
-[![Go Report Card](https://goreportcard.com/badge/github.com/invopop/gobl.facturae)](https://goreportcard.com/report/github.com/invopop/gobl.facturae)
-[![GoDoc](https://godoc.org/github.com/invopop/gobl.facturae?status.svg)](https://godoc.org/github.com/invopop/gobl.facturae)
-![Latest Tag](https://img.shields.io/github/v/tag/invopop/gobl.facturae)
+[![Lint](https://github.com/invopop/gobl.es.facturae/actions/workflows/lint.yaml/badge.svg)](https://github.com/invopop/gobl.es.facturae/actions/workflows/lint.yaml)
+[![Test Go](https://github.com/invopop/gobl.es.facturae/actions/workflows/test.yaml/badge.svg)](https://github.com/invopop/gobl.es.facturae/actions/workflows/test.yaml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/invopop/gobl.es.facturae)](https://goreportcard.com/report/github.com/invopop/gobl.es.facturae)
+[![GoDoc](https://godoc.org/github.com/invopop/gobl.es.facturae?status.svg)](https://godoc.org/github.com/invopop/gobl.es.facturae)
+![Latest Tag](https://img.shields.io/github/v/tag/invopop/gobl.es.facturae)
 
 ## Usage
 
@@ -64,7 +64,7 @@ The command line interface is useful when working with languages other than Go.
 #### Installation
 
 ```bash
-go install github.com/invopop/gobl.facturae/cmd/gobl.facturae@latest
+go install github.com/invopop/gobl.es.facturae/cmd/gobl.facturae@latest
 ```
 
 #### Usage

@@ -3,7 +3,7 @@ package facturae_test
 import (
 	"testing"
 
-	"github.com/invopop/gobl.facturae/test"
+	"github.com/invopop/gobl.es.facturae/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

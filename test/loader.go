@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/invopop/gobl"
-	facturae "github.com/invopop/gobl.facturae"
+	facturae "github.com/invopop/gobl.es.facturae"
 	"github.com/invopop/xmldsig"
 )
 

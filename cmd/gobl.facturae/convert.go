@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	facturae "github.com/invopop/gobl.facturae"
+	facturae "github.com/invopop/gobl.es.facturae"
 	"github.com/invopop/xmldsig"
 	"github.com/spf13/cobra"
 )

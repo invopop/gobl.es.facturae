@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	facturae "github.com/invopop/gobl.facturae"
-	"github.com/invopop/gobl.facturae/test"
+	facturae "github.com/invopop/gobl.es.facturae"
+	"github.com/invopop/gobl.es.facturae/test"
 	"github.com/invopop/xmldsig"
 	"github.com/stretchr/testify/require"
 )

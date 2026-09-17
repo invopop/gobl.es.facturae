@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/invopop/gobl.facturae/test"
+	"github.com/invopop/gobl.es.facturae/test"
 	"github.com/magefile/mage/sh"
 	"github.com/magefile/mage/target"
 )
