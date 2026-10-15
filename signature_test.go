@@ -3,15 +3,18 @@ package facturae_test
 import (
 	"bytes"
 	"crypto"
+	"crypto/rand"
 	"crypto/rsa"
 	_ "crypto/sha1"   // hashFor
 	_ "crypto/sha256" // hashFor
 	_ "crypto/sha512" // hashFor
 	"crypto/x509"
+	"crypto/x509/pkix"
 	"encoding/base64"
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"math/big"
 	"strings"
 	"testing"
 	"time"
@@ -45,7 +48,7 @@ func TestSignature(t *testing.T) {
 			data, err := facturae.Encode(doc)
 			require.NoError(t, err)
 
-			require.NoError(t, verifySignature(data, cert))
+			require.NoError(t, verifySignature(data, cert.NakedPEM()))
 
 			t.Run("decodes the signature", func(t *testing.T) {
 				out, err := facturae.Decode(data)
@@ -66,36 +69,56 @@ func TestSignature(t *testing.T) {
 
 	t.Run("refuses a changed document", func(t *testing.T) {
 		out := bytes.Replace(data, []byte("<InvoiceNumber>"), []byte("<InvoiceNumber>X"), 1)
-		err := verifySignature(out, cert)
+		err := verifySignature(out, cert.NakedPEM())
 		assert.ErrorContains(t, err, "digest of reference \"\"")
 	})
 	t.Run("refuses changed signed properties", func(t *testing.T) {
 		out := bytes.Replace(data, []byte("Factura Electrónica"), []byte("Factura"), 1)
-		err := verifySignature(out, cert)
+		err := verifySignature(out, cert.NakedPEM())
 		assert.ErrorContains(t, err, "SignedProperties")
 	})
 	t.Run("refuses a changed signed info", func(t *testing.T) {
 		out := bytes.Replace(data, []byte(`URI=""`), []byte(`URI="" Id="X"`), 1)
-		err := verifySignature(out, cert)
+		err := verifySignature(out, cert.NakedPEM())
 		assert.ErrorContains(t, err, "signature value")
 	})
 	t.Run("refuses an indented document", func(t *testing.T) {
 		out, err := doc.BytesIndent()
 		require.NoError(t, err)
-		assert.Error(t, verifySignature(out, cert))
+		assert.Error(t, verifySignature(out, cert.NakedPEM()))
 	})
 	t.Run("refuses another certificate", func(t *testing.T) {
-		other, err := xmldsig.LoadCertificate(test.GetCertificatesPath()+"invopop.p12", "invopop")
-		require.NoError(t, err)
-		assert.ErrorContains(t, verifySignature(data, other), "certificate")
+		other := newCertificate(t)
+		assert.ErrorContains(t, verifySignature(data, other), "certificate is not the expected one")
 	})
+	t.Run("refuses a replaced certificate", func(t *testing.T) {
+		other := newCertificate(t)
+		out := bytes.Replace(data, []byte(cert.NakedPEM()), []byte(other), 1)
+		assert.ErrorContains(t, verifySignature(out, other), "signing certificate")
+	})
+}
+
+// newCertificate provides a self-signed certificate, encoded in base64 DER.
+func newCertificate(t *testing.T) string {
+	t.Helper()
+	key, err := rsa.GenerateKey(rand.Reader, 2048)
+	require.NoError(t, err)
+	tmpl := &x509.Certificate{
+		SerialNumber: big.NewInt(1),
+		Subject:      pkix.Name{CommonName: "Other"},
+		NotBefore:    signingTime,
+		NotAfter:     signingTime.AddDate(1, 0, 0),
+	}
+	der, err := x509.CreateCertificate(rand.Reader, tmpl, tmpl, &key.PublicKey, key)
+	require.NoError(t, err)
+	return base64.StdEncoding.EncodeToString(der)
 }
 
 // verifySignature checks a signed FacturaE document as a receiver would,
 // from its bytes alone: every reference digest, the XAdES signing
 // certificate, and the signature value, using the certificate in the
-// document, which must be the one expected.
-func verifySignature(data []byte, expected *xmldsig.Certificate) error {
+// document, which must be the one expected, encoded in base64 DER.
+func verifySignature(data []byte, expected string) error {
 	doc := etree.NewDocument()
 	if err := doc.ReadFromBytes(data); err != nil {
 		return err
@@ -117,7 +140,7 @@ func verifySignature(data []byte, expected *xmldsig.Certificate) error {
 	if err != nil {
 		return err
 	}
-	if base64.StdEncoding.EncodeToString(cert.Raw) != expected.NakedPEM() {
+	if base64.StdEncoding.EncodeToString(cert.Raw) != expected {
 		return errors.New("certificate is not the expected one")
 	}
 	cd := sig.FindElement(".//xades:SigningCertificate/xades:Cert/xades:CertDigest")
