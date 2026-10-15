@@ -14,15 +14,15 @@ Copyright [Invopop Ltd.](https://invopop.com) 2023. Released publicly under the 
 
 ### Go
 
-There are a couple of entry points to build a new FacturaE document. If you already have a GOBL Envelope available in Go, you could convert and output to a data file like this:
+Convert the invoice in a GOBL envelope with `Export`, and get the XML document's bytes with `Encode`:
 
 ```golang
-doc, err := facturae.NewInvoice(env)
+doc, err := facturae.Export(env)
 if err != nil {
     panic(err)
 }
 
-data, err := doc.Bytes()
+data, err := facturae.Encode(doc)
 if err != nil {
     panic(err)
 }
@@ -30,16 +30,6 @@ if err != nil {
 if err = os.WriteFile("./test.xml", data, 0644); err != nil {
     panic(err)
 }
-```
-
-If you're loading from a file, you can use the `LoadGOBL` convenience method:
-
-```golang
-doc, err := facturae.LoadGOBL(file)
-if err != nil {
-    panic(err)
-}
-// do something with doc
 ```
 
 Outputting to a FacturaE XML is most useful when the document is signed. Use a certificate to sign the document as follows:
@@ -51,11 +41,26 @@ if err != nil {
     panic(err)
 }
 
-doc, err := facturae.NewInvoice(env, facturae.WithCertificate(cert))
+doc, err := facturae.Export(env, facturae.WithCertificate(cert))
 if err != nil {
     panic(err)
 }
 ```
+
+### GOBL convert register
+
+Importing this package registers the `es-facturae-v3` format with the GOBL [`convert`](https://github.com/invopop/gobl/tree/main/convert) register, for export only:
+
+```golang
+import (
+    "github.com/invopop/gobl/convert"
+    _ "github.com/invopop/gobl.es.facturae"
+)
+
+out, err := convert.Export(env, "es-facturae-v3")
+```
+
+Invoices must include the `es-facturae-v3` addon and a customer. Otherwise the export is refused with `convert.ErrNotSupported` and rules faults, such as `ES-FACTURAE-V3-BILL-INVOICE-01` on `$addons`. Documents exported through the register are not signed: use `Export` with `WithCertificate` to sign them.
 
 ### CLI
 

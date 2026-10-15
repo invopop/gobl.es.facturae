@@ -10,7 +10,7 @@ import (
 
 func TestFacturaeHeader(t *testing.T) {
 	t.Run("should contain the facturae header info", func(t *testing.T) {
-		doc, err := test.LoadGOBL("invoice-vat.json")
+		doc, err := test.NewDocumentFrom("invoice-vat.json")
 		require.NoError(t, err)
 
 		assert.Nil(t, err)

@@ -2,11 +2,9 @@ package facturae
 
 import (
 	"bytes"
-	"encoding/json"
 	"encoding/xml"
 	"errors"
 	"fmt"
-	"io"
 
 	"github.com/invopop/gobl"
 	addon "github.com/invopop/gobl/addons/es/facturae"
@@ -83,24 +81,9 @@ func WithSigning(opts ...xmldsig.Option) Option {
 	}
 }
 
-// LoadGOBL will build a FacturaE Document from the source buffer
-func LoadGOBL(src io.Reader, opts ...Option) (*Document, error) {
-	buf := new(bytes.Buffer)
-	if _, err := buf.ReadFrom(src); err != nil {
-		return nil, err
-	}
-
-	env := new(gobl.Envelope)
-	if err := json.Unmarshal(buf.Bytes(), env); err != nil {
-		return nil, err
-	}
-
-	return NewInvoice(env, opts...)
-}
-
-// NewInvoice expects the base envelope and provides a new Document
-// containing the XML version.
-func NewInvoice(env *gobl.Envelope, opts ...Option) (*Document, error) {
+// Export converts the invoice in the GOBL envelope into a FacturaE document,
+// signed when a certificate is provided.
+func Export(env *gobl.Envelope, opts ...Option) (*Document, error) {
 	// prepare our options
 	xmlOpts := new(options)
 	for _, opt := range opts {
@@ -210,23 +193,10 @@ func NewInvoice(env *gobl.Envelope, opts ...Option) (*Document, error) {
 	return d, nil
 }
 
-// Buffer returns a byte buffer representation of the complete XML document.
-func (d *Document) Buffer() (*bytes.Buffer, error) {
-	return d.buffer(xml.Header)
-}
-
-// String converts a struct representation to its string representation
-func (d *Document) String() (string, error) {
-	buf, err := d.Buffer()
-	if err != nil {
-		return "", err
-	}
-	return buf.String(), nil
-}
-
-// Bytes returns the XML document bytes
-func (d *Document) Bytes() ([]byte, error) {
-	buf, err := d.Buffer()
+// Encode provides the FacturaE XML document's bytes, including the XML
+// declaration.
+func Encode(doc *Document) ([]byte, error) {
+	buf, err := doc.buffer(xml.Header)
 	if err != nil {
 		return nil, err
 	}

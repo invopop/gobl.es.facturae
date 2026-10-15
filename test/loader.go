@@ -42,7 +42,7 @@ func NewDocumentFrom(name string, opts ...facturae.Option) (*facturae.Document, 
 	if err != nil {
 		return nil, err
 	}
-	return facturae.NewInvoice(env, opts...)
+	return facturae.Export(env, opts...)
 }
 
 // LoadTestEnvelope returns a GOBL Envelope from a file in the `test/data` folder
@@ -60,16 +60,6 @@ func LoadTestEnvelope(name string) (*gobl.Envelope, error) {
 	}
 
 	return env, nil
-}
-
-// LoadGOBL loads a GoBL test file into structs
-func LoadGOBL(name string, opts ...facturae.Option) (*facturae.Document, error) {
-	envelopeReader, _ := os.Open(filepath.Join(GetDataPath(), name))
-	doc, err := facturae.LoadGOBL(envelopeReader, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return doc, nil
 }
 
 // ConvertToXML takes the .json invoices generated previously and converts them
@@ -94,7 +84,7 @@ func ConvertToXML() error {
 	for _, file := range files {
 		fmt.Printf("processing file: %v\n", file)
 
-		doc, err := LoadGOBL(file,
+		doc, err := NewDocumentFrom(file,
 			facturae.WithCertificate(cert),
 			facturae.WithThirdParty(thirdParty),
 		)
@@ -102,7 +92,7 @@ func ConvertToXML() error {
 			return err
 		}
 
-		data, err := doc.Bytes()
+		data, err := facturae.Encode(doc)
 		if err != nil {
 			return fmt.Errorf("extracting document bytes: %w", err)
 		}

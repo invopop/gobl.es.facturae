@@ -10,7 +10,7 @@ import (
 
 func TestPartiesInfo(t *testing.T) {
 	t.Run("should contain the provider party info", func(t *testing.T) {
-		doc, err := test.LoadGOBL("invoice-vat-irpf.json")
+		doc, err := test.NewDocumentFrom("invoice-vat-irpf.json")
 		require.NoError(t, err)
 
 		assert.Equal(t, "F", doc.Parties.Seller.TaxID.PersonTypeCode)
@@ -31,7 +31,7 @@ func TestPartiesInfo(t *testing.T) {
 
 func TestPartiesInfoCustomer(t *testing.T) {
 	t.Run("should contain the customer party info", func(t *testing.T) {
-		doc, err := test.LoadGOBL("invoice-vat.json")
+		doc, err := test.NewDocumentFrom("invoice-vat.json")
 		require.NoError(t, err)
 
 		assert.Equal(t, "J", doc.Parties.Buyer.TaxID.PersonTypeCode)
@@ -49,7 +49,7 @@ func TestPartiesInfoCustomer(t *testing.T) {
 
 func TestAdministrativeCentres(t *testing.T) {
 	t.Run("should contain administrative centres for FACe invoices", func(t *testing.T) {
-		doc, err := test.LoadGOBL("invoice-face.json")
+		doc, err := test.NewDocumentFrom("invoice-face.json")
 		require.NoError(t, err)
 
 		centres := doc.Parties.Buyer.AdministrativeCentres
@@ -77,7 +77,7 @@ func TestAdministrativeCentres(t *testing.T) {
 	})
 
 	t.Run("should not include administrative centres when not present", func(t *testing.T) {
-		doc, err := test.LoadGOBL("invoice-vat.json")
+		doc, err := test.NewDocumentFrom("invoice-vat.json")
 		require.NoError(t, err)
 
 		assert.Nil(t, doc.Parties.Buyer.AdministrativeCentres)
@@ -86,7 +86,7 @@ func TestAdministrativeCentres(t *testing.T) {
 
 func TestOverseasAddressIndividual(t *testing.T) {
 	t.Run("should contain overseas address for individual supplier", func(t *testing.T) {
-		doc, err := test.LoadGOBL("invoice-overseas-individual.json")
+		doc, err := test.NewDocumentFrom("invoice-overseas-individual.json")
 		require.NoError(t, err)
 
 		seller := doc.Parties.Seller

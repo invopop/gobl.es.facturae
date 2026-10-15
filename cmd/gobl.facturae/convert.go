@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 
+	"github.com/invopop/gobl"
 	facturae "github.com/invopop/gobl.es.facturae"
 	"github.com/invopop/xmldsig"
 	"github.com/spf13/cobra"
@@ -57,12 +59,17 @@ func (c *convertOpts) runE(cmd *cobra.Command, args []string) error {
 		opts = append(opts, facturae.WithCertificate(cert))
 	}
 
-	doc, err := facturae.LoadGOBL(input, opts...)
+	env := new(gobl.Envelope)
+	if err := json.NewDecoder(input).Decode(env); err != nil {
+		return fmt.Errorf("parsing input: %w", err)
+	}
+
+	doc, err := facturae.Export(env, opts...)
 	if err != nil {
 		return err
 	}
 
-	data, err := doc.Bytes()
+	data, err := facturae.Encode(doc)
 	if err != nil {
 		return fmt.Errorf("generating facturae xml: %w", err)
 	}

@@ -1,9 +1,6 @@
 package facturae_test
 
 import (
-	"os"
-	"path/filepath"
-	"strings"
 	"testing"
 
 	facturae "github.com/invopop/gobl.es.facturae"
@@ -12,35 +9,12 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestLoadDocument(t *testing.T) {
-	t.Run("should return an error if the envelope is empty", func(t *testing.T) {
-		envelopeReader := strings.NewReader("")
-		_, err := facturae.LoadGOBL(envelopeReader)
-		assert.Error(t, err)
-	})
-
-	t.Run("should return an error if no document on the envelope", func(t *testing.T) {
-		envelopeReader := strings.NewReader("{}")
-		_, err := facturae.LoadGOBL(envelopeReader)
-		assert.Error(t, err)
-	})
-
-	t.Run("should return a document", func(t *testing.T) {
-		envelopeReader, err := os.Open(filepath.Join(test.GetDataPath(), "invoice-vat.json"))
-		require.NoError(t, err)
-		doc, err := facturae.LoadGOBL(envelopeReader)
-		require.NoError(t, err)
-		require.NotNil(t, doc.Invoices)
-		require.NotNil(t, doc.Invoices.List)
-		assert.NotEmpty(t, doc.Invoices.List)
-	})
-}
-
 func TestTransformDocument(t *testing.T) {
 	t.Run("basic invoice", func(t *testing.T) {
-		doc, err := test.LoadGOBL("invoice-vat.json")
+		doc, err := test.NewDocumentFrom("invoice-vat.json")
 		require.NoError(t, err)
-		data, err := doc.String()
+		out, err := facturae.Encode(doc)
+		data := string(out)
 		require.NoError(t, err)
 
 		const xmlDeclaration = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -70,9 +44,10 @@ func TestTransformDocument(t *testing.T) {
 	})
 
 	t.Run("invoice with withheld taxes", func(t *testing.T) {
-		doc, err := test.LoadGOBL("invoice-vat-irpf.json")
+		doc, err := test.NewDocumentFrom("invoice-vat-irpf.json")
 		require.NoError(t, err)
-		data, err := doc.String()
+		out, err := facturae.Encode(doc)
+		data := string(out)
 		require.NoError(t, err)
 
 		assert.Nil(t, err)
@@ -84,10 +59,11 @@ func TestTransformDocument(t *testing.T) {
 		certificate, err := test.LoadCertificate()
 		require.NoError(t, err)
 
-		doc, err := test.LoadGOBL("invoice-vat.json", facturae.WithCertificate(certificate))
+		doc, err := test.NewDocumentFrom("invoice-vat.json", facturae.WithCertificate(certificate))
 		require.NoError(t, err)
 
-		data, err := doc.String()
+		out, err := facturae.Encode(doc)
+		data := string(out)
 		require.NoError(t, err)
 		assert.Contains(t, data, "<ds:Signature")
 	})
@@ -96,10 +72,11 @@ func TestTransformDocument(t *testing.T) {
 		certificate, err := test.LoadCertificate()
 		require.NoError(t, err)
 
-		doc, err := test.LoadGOBL("invoice-vat.json", facturae.WithCertificate(certificate), facturae.WithTimestamp(true))
+		doc, err := test.NewDocumentFrom("invoice-vat.json", facturae.WithCertificate(certificate), facturae.WithTimestamp(true))
 		require.Nil(t, err)
 
-		data, err := doc.String()
+		out, err := facturae.Encode(doc)
+		data := string(out)
 		require.NoError(t, err)
 
 		assert.Contains(t, data, "<xades:EncapsulatedTimeStamp>")
