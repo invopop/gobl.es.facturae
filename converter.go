@@ -82,7 +82,7 @@ func (converter) Accepts(_ cbc.Key, env *gobl.Envelope) error {
 	return nil
 }
 
-func (converter) Export(_ cbc.Key, env *gobl.Envelope) ([]byte, error) {
+func (converter) Export(_ cbc.Key, env *gobl.Envelope, _ *convert.ExportOptions) ([]byte, error) {
 	doc, err := Export(env)
 	if err != nil {
 		return nil, err
