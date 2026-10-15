@@ -43,7 +43,7 @@ func TestXMLGeneration(t *testing.T) {
 			data, err := convertExample(example, opts...)
 			require.NoError(t, err)
 
-			outPath := filepath.Join(test.GetDataPath(), "out", strings.TrimSuffix(example, ".json")+".xml")
+			outPath := filepath.Join(test.GetDataPath(), "convert", "out", strings.TrimSuffix(example, ".json")+".xml")
 
 			if *updateOut {
 				test.ValidateAgainstSchema(t, data)
@@ -64,7 +64,7 @@ func TestXMLGeneration(t *testing.T) {
 }
 
 func lookupExamples() ([]string, error) {
-	examples, err := filepath.Glob(filepath.Join(test.GetDataPath(), "*.json"))
+	examples, err := filepath.Glob(filepath.Join(test.GetDataPath(), "convert", "*.json"))
 	if err != nil {
 		return nil, err
 	}

@@ -3,7 +3,6 @@ package test
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"os"
 	"path"
 	"path/filepath"
@@ -36,7 +35,7 @@ var thirdParty = &facturae.ThirdParty{
 	},
 }
 
-// NewDocumentFrom creates a FacturaE Document from a GOBL file in the `test/data` folder
+// NewDocumentFrom creates a FacturaE Document from a GOBL file in the `test/data/convert` folder
 func NewDocumentFrom(name string, opts ...facturae.Option) (*facturae.Document, error) {
 	env, err := LoadTestEnvelope(name)
 	if err != nil {
@@ -45,9 +44,9 @@ func NewDocumentFrom(name string, opts ...facturae.Option) (*facturae.Document, 
 	return facturae.Export(env, opts...)
 }
 
-// LoadTestEnvelope returns a GOBL Envelope from a file in the `test/data` folder
+// LoadTestEnvelope returns a GOBL Envelope from a file in the `test/data/convert` folder
 func LoadTestEnvelope(name string) (*gobl.Envelope, error) {
-	src, _ := os.Open(filepath.Join(GetDataPath(), name))
+	src, _ := os.Open(filepath.Join(GetDataPath(), "convert", name))
 
 	buf := new(bytes.Buffer)
 	if _, err := buf.ReadFrom(src); err != nil {
@@ -60,51 +59,6 @@ func LoadTestEnvelope(name string) (*gobl.Envelope, error) {
 	}
 
 	return env, nil
-}
-
-// ConvertToXML takes the .json invoices generated previously and converts them
-// into XML FacturaE documents.
-func ConvertToXML() error {
-	var files []string
-	err := filepath.Walk(GetDataPath(), func(path string, info os.FileInfo, err error) error {
-		if filepath.Ext(path) == ".json" {
-			files = append(files, filepath.Base(path))
-		}
-		return nil
-	})
-	if err != nil {
-		return err
-	}
-
-	cert, err := LoadCertificate()
-	if err != nil {
-		return err
-	}
-
-	for _, file := range files {
-		fmt.Printf("processing file: %v\n", file)
-
-		doc, err := NewDocumentFrom(file,
-			facturae.WithCertificate(cert),
-			facturae.WithThirdParty(thirdParty),
-		)
-		if err != nil {
-			return err
-		}
-
-		data, err := facturae.Encode(doc)
-		if err != nil {
-			return fmt.Errorf("extracting document bytes: %w", err)
-		}
-
-		np := strings.TrimSuffix(file, filepath.Ext(file)) + ".xml"
-		err = os.WriteFile(GetDataPath()+"/"+np, data, 0644)
-		if err != nil {
-			return fmt.Errorf("writing file: %w", err)
-		}
-	}
-
-	return nil
 }
 
 // GetTestPath returns the path to the `test` folder
