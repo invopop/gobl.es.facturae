@@ -84,7 +84,8 @@ func TestConverterExport(t *testing.T) {
 
 		imported, err := convert.Import(out.Data)
 		require.NoError(t, err)
-		inv := imported.Extract().(*bill.Invoice)
+		inv := imported.Envelope.Extract().(*bill.Invoice)
+		assert.Empty(t, imported.Attachments)
 		assert.Equal(t, env.Extract().(*bill.Invoice).Totals.Payable.String(), inv.Totals.Payable.String())
 		assert.True(t, addon.V3.In(inv.GetAddons()...))
 	})

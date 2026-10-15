@@ -83,7 +83,7 @@ import (
 )
 
 out, err := convert.Export(env, "es-facturae-v3")
-env, err := convert.Import(data)
+res, err := convert.Import(data) // res.Envelope
 ```
 
 Invoices must include the `es-facturae-v3` addon and a customer to be exported. Otherwise the export is refused with `convert.ErrNotSupported` and rules faults, such as `ES-FACTURAE-V3-BILL-INVOICE-01` on `$addons`. Documents exported through the register are not signed: use `Export` with `WithCertificate` to sign them. Attachments are not embedded yet, so exports with `convert.WithAttachments` are refused.
