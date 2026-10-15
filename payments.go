@@ -72,7 +72,7 @@ func newPaymentDetails(paymentInfo *bill.PaymentDetails) *PaymentDetails {
 
 		if instructions.Key == pay.MeansKeyDirectDebit {
 			xmlInstallment.AccountToBeDebited = newDebitBankAccount(instructions.DirectDebit)
-			xmlInstallment.DebitReconciliationReference = instructions.DirectDebit.Ref
+			xmlInstallment.DebitReconciliationReference = instructions.DirectDebit.Ref.String()
 		}
 
 		if instructions.Key == pay.MeansKeyOnline {

@@ -3,7 +3,7 @@ module github.com/invopop/gobl.es.facturae
 go 1.25.0
 
 require (
-	github.com/invopop/gobl v0.507.0
+	github.com/invopop/gobl v0.508.1
 	github.com/invopop/xmldsig v0.14.0
 	github.com/lestrrat-go/libxml2 v0.0.0-20240905100032-c934e3fcb9d3
 	github.com/magefile/mage v1.15.0
