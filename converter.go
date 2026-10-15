@@ -66,12 +66,16 @@ func (converter) Detect(in *convert.Input) cbc.Key {
 	return cbc.KeyEmpty
 }
 
-func (converter) Import(_ cbc.Key, data []byte) (*gobl.Envelope, error) {
+func (converter) Import(_ cbc.Key, data []byte) (*convert.ImportResult, error) {
 	doc, err := Decode(data)
 	if err != nil {
 		return nil, err
 	}
-	return Import(doc)
+	env, err := Import(doc)
+	if err != nil {
+		return nil, err
+	}
+	return &convert.ImportResult{Envelope: env}, nil
 }
 
 // Accepts checks the invoice includes the FacturaE addon and a customer.
@@ -82,7 +86,7 @@ func (converter) Accepts(_ cbc.Key, env *gobl.Envelope) error {
 	return nil
 }
 
-func (converter) Export(_ cbc.Key, env *gobl.Envelope) ([]byte, error) {
+func (converter) Export(_ cbc.Key, env *gobl.Envelope, _ *convert.ExportOptions) ([]byte, error) {
 	doc, err := Export(env)
 	if err != nil {
 		return nil, err

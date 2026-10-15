@@ -26,6 +26,13 @@ func TestConverterFormat(t *testing.T) {
 }
 
 func TestConverterExport(t *testing.T) {
+	t.Run("attachments", func(t *testing.T) {
+		env, err := test.LoadTestEnvelope("invoice-vat.json")
+		require.NoError(t, err)
+		pdf := &convert.Attachment{Name: "invoice.pdf", MIME: "application/pdf", Data: []byte("%PDF")}
+		_, err = convert.Export(env, facturae.KeyFacturaE, convert.WithAttachments(pdf))
+		assert.ErrorIs(t, err, convert.ErrNotSupported)
+	})
 	t.Run("invoice", func(t *testing.T) {
 		env, err := test.LoadTestEnvelope("invoice-vat.json")
 		require.NoError(t, err)
@@ -77,7 +84,8 @@ func TestConverterExport(t *testing.T) {
 
 		imported, err := convert.Import(out.Data)
 		require.NoError(t, err)
-		inv := imported.Extract().(*bill.Invoice)
+		inv := imported.Envelope.Extract().(*bill.Invoice)
+		assert.Empty(t, imported.Attachments)
 		assert.Equal(t, env.Extract().(*bill.Invoice).Totals.Payable.String(), inv.Totals.Payable.String())
 		assert.True(t, addon.V3.In(inv.GetAddons()...))
 	})
