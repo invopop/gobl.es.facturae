@@ -130,6 +130,8 @@ The `xsdvalidate` build tag validates exported documents against the FacturaE sc
 go test -tags xsdvalidate ./... --update
 ```
 
+`TestSignature` checks each signed export as a receiver would, from the encoded bytes alone: every reference digest, the XAdES signing certificate and the signature value. It also checks that changed documents are refused, and that `Decode` reads the signature back. The documents in `convert/out` are indented for review, which breaks their signatures. Use `Encode` for documents that will be sent.
+
 Test certificates are in `test/certificates`. The Spanish government [validator](https://face.gob.es/es/facturas/validar-visualizar-facturas) checks documents and their signatures.
 
 ## Considerations

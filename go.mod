@@ -3,10 +3,12 @@ module github.com/invopop/gobl.es.facturae
 go 1.25.0
 
 require (
+	github.com/beevik/etree v1.6.0
 	github.com/invopop/gobl v0.508.2-0.20261015114730-23e167f58d6c
 	github.com/invopop/xmlctx v0.13.0
 	github.com/invopop/xmldsig v0.14.0
 	github.com/lestrrat-go/libxml2 v0.0.0-20240905100032-c934e3fcb9d3
+	github.com/russellhaering/goxmldsig v1.6.0
 	github.com/stretchr/testify v1.11.1
 )
 
@@ -15,7 +17,6 @@ require (
 	github.com/Masterminds/semver/v3 v3.4.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
-	github.com/beevik/etree v1.6.0 // indirect
 	github.com/buger/jsonparser v1.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/expr-lang/expr v1.17.8 // indirect
@@ -28,7 +29,6 @@ require (
 	github.com/pb33f/ordered-map/v2 v2.3.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/russellhaering/goxmldsig v1.6.0 // indirect
 	go.yaml.in/yaml/v4 v4.0.0-rc.2 // indirect
 	golang.org/x/crypto v0.48.0 // indirect
 	golang.org/x/text v0.38.0 // indirect

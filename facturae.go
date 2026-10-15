@@ -220,9 +220,10 @@ func Decode(data []byte) (*Document, error) {
 	}
 	doc := new(Document)
 	err = xmlctx.Unmarshal(data, doc, xmlctx.WithNamespaces(map[string]string{
-		"":   "",
-		"fe": NamespaceFacturaE,
-		"ds": NamespaceDSig,
+		"":      "",
+		"fe":    NamespaceFacturaE,
+		"ds":    NamespaceDSig,
+		"xades": xmldsig.NamespaceXAdES,
 	}))
 	if err != nil {
 		return nil, err
