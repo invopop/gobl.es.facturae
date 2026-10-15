@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	github.com/beevik/etree v1.6.0
-	github.com/invopop/gobl v0.509.1-0.20261015154618-4fa408e4673e
+	github.com/invopop/gobl v0.510.0
 	github.com/invopop/xmlctx v0.13.0
 	github.com/invopop/xmldsig v0.14.0
 	github.com/lestrrat-go/libxml2 v0.0.0-20240905100032-c934e3fcb9d3
