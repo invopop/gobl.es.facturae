@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	"github.com/invopop/gobl"
-	addon "github.com/invopop/gobl/addons/es/facturae"
+	addon "github.com/invopop/gobl.es.facturae/addon"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/xmldsig"
 	"github.com/invopop/xmldsig/profiles/facturae"

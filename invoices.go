@@ -1,7 +1,7 @@
 package facturae
 
 import (
-	"github.com/invopop/gobl/addons/es/facturae"
+	addon "github.com/invopop/gobl.es.facturae/addon"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cal"
 	"github.com/invopop/gobl/num"
@@ -153,8 +153,8 @@ func newInvoiceHeader(inv *bill.Invoice) *InvoiceHeader {
 	}
 
 	if inv.Tax != nil {
-		h.InvoiceDocumentType = inv.Tax.Ext.Get(facturae.ExtKeyDocType).String()
-		h.InvoiceClass = inv.Tax.Ext.Get(facturae.ExtKeyInvoiceClass).String()
+		h.InvoiceDocumentType = inv.Tax.Ext.Get(addon.ExtKeyDocType).String()
+		h.InvoiceClass = inv.Tax.Ext.Get(addon.ExtKeyInvoiceClass).String()
 	}
 
 	// Only one preceding document currently supported

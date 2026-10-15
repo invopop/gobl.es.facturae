@@ -1,7 +1,7 @@
 package facturae
 
 import (
-	"github.com/invopop/gobl/addons/es/facturae"
+	addon "github.com/invopop/gobl.es.facturae/addon"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cal"
 	"github.com/invopop/gobl/num"
@@ -142,7 +142,7 @@ func (it *InvoiceTotals) setAdvances(advances []*pay.Record) {
 	regular := make([]*PaymentOnAccount, 0)
 	grants := make([]*Subsidy, 0)
 	for _, a := range advances {
-		if a.Ext.Get(facturae.ExtKeySubsidy) == "S" {
+		if a.Ext.Get(addon.ExtKeySubsidy) == "S" {
 			g := &Subsidy{
 				SubsidyDescription: a.Description,
 				SubsidyAmount:      amount(a.Amount),

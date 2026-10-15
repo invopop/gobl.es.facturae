@@ -1,7 +1,7 @@
 package facturae
 
 import (
-	"github.com/invopop/gobl/addons/es/facturae"
+	addon "github.com/invopop/gobl.es.facturae/addon"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cal"
 	"github.com/invopop/gobl/cbc"
@@ -90,8 +90,8 @@ func newCorrective(inv *bill.Invoice) *Corrective {
 	c.TaxPeriod = newPeriodDates(period)
 
 	// determine the reason from the extension
-	kd := tax.ExtensionForKey(facturae.ExtKeyCorrection)
-	cc := p.Ext.Get(facturae.ExtKeyCorrection)
+	kd := tax.ExtensionForKey(addon.ExtKeyCorrection)
+	cc := p.Ext.Get(addon.ExtKeyCorrection)
 	if row := kd.CodeDef(cc); row != nil {
 		c.ReasonCode = row.Code.String()
 		c.ReasonDescription = row.Name.In(i18n.ES)
