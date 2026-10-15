@@ -10,7 +10,7 @@ import (
 
 func TestListSummary(t *testing.T) {
 	t.Run("should contain the taxes summary", func(t *testing.T) {
-		doc, err := test.LoadGOBL("invoice-vat-irpf-inc.json")
+		doc, err := test.NewDocumentFrom("invoice-vat-irpf-inc.json")
 		require.NoError(t, err)
 
 		xmlInvoice := doc.Invoices.List[0]

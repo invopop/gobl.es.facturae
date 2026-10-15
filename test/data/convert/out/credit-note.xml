@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fe:Facturae xmlns:fe="http://www.facturae.gob.es/formato/Versiones/Facturaev3_2_2.xml">
+	<FileHeader>
+		<SchemaVersion>3.2.2</SchemaVersion>
+		<Modality>I</Modality>
+		<InvoiceIssuerType>TE</InvoiceIssuerType>
+		<ThirdParty>
+			<TaxIdentification>
+				<PersonTypeCode>J</PersonTypeCode>
+				<ResidenceTypeCode>R</ResidenceTypeCode>
+				<TaxIdentificationNumber>B23103039</TaxIdentificationNumber>
+			</TaxIdentification>
+			<LegalEntity>
+				<CorporateName>Hypeprop S.L.</CorporateName>
+				<AddressInSpain>
+					<Address>Calle Campo Real 74</Address>
+					<PostCode>28023</PostCode>
+					<Town>Torrejón De La Calzada</Town>
+					<Province>Madrid</Province>
+					<CountryCode>ESP</CountryCode>
+				</AddressInSpain>
+			</LegalEntity>
+		</ThirdParty>
+		<Batch>
+			<BatchIdentifier>B23103039-TEST01001R</BatchIdentifier>
+			<InvoicesCount>1</InvoicesCount>
+			<TotalInvoicesAmount>
+				<TotalAmount>-5084.42</TotalAmount>
+			</TotalInvoicesAmount>
+			<TotalOutstandingAmount>
+				<TotalAmount>-5084.42</TotalAmount>
+			</TotalOutstandingAmount>
+			<TotalExecutableAmount>
+				<TotalAmount>-5084.42</TotalAmount>
+			</TotalExecutableAmount>
+			<InvoiceCurrencyCode>EUR</InvoiceCurrencyCode>
+		</Batch>
+	</FileHeader>
+	<Parties>
+		<SellerParty>
+			<TaxIdentification>
+				<PersonTypeCode>J</PersonTypeCode>
+				<ResidenceTypeCode>R</ResidenceTypeCode>
+				<TaxIdentificationNumber>B23103039</TaxIdentificationNumber>
+			</TaxIdentification>
+			<LegalEntity>
+				<CorporateName>Hypeprop Sl</CorporateName>
+				<AddressInSpain>
+					<Address>Campo Real, 74</Address>
+					<PostCode>28023</PostCode>
+					<Town>Torrejón De La Calzada</Town>
+					<Province>Madrid</Province>
+					<CountryCode>ESP</CountryCode>
+				</AddressInSpain>
+				<ContactDetails>
+					<Telephone>+34910730028</Telephone>
+					<ElectronicMail>rxazy27xfc@iname.com</ElectronicMail>
+					<ContactPersons>Paloma Araujo</ContactPersons>
+				</ContactDetails>
+			</LegalEntity>
+		</SellerParty>
+		<BuyerParty>
+			<TaxIdentification>
+				<PersonTypeCode>J</PersonTypeCode>
+				<ResidenceTypeCode>R</ResidenceTypeCode>
+				<TaxIdentificationNumber>B77436020</TaxIdentificationNumber>
+			</TaxIdentification>
+			<LegalEntity>
+				<CorporateName>Moniward Sl</CorporateName>
+				<AddressInSpain>
+					<Address>Plaza Horno, 35</Address>
+					<PostCode>45083</PostCode>
+					<Town>Nombela</Town>
+					<Province>Toledo</Province>
+					<CountryCode>ESP</CountryCode>
+				</AddressInSpain>
+				<ContactDetails>
+					<ElectronicMail>bfn25xf3p@lycos.co.uk</ElectronicMail>
+				</ContactDetails>
+			</LegalEntity>
+		</BuyerParty>
+	</Parties>
+	<Invoices>
+		<Invoice>
+			<InvoiceHeader>
+				<InvoiceNumber>TEST01001R</InvoiceNumber>
+				<InvoiceDocumentType>FC</InvoiceDocumentType>
+				<InvoiceClass>OR</InvoiceClass>
+				<Corrective>
+					<InvoiceNumber>TEST01001F</InvoiceNumber>
+					<ReasonCode>01</ReasonCode>
+					<ReasonDescription>Número de la factura</ReasonDescription>
+					<TaxPeriod>
+						<StartDate>2021-12-08</StartDate>
+						<EndDate>2021-12-08</EndDate>
+					</TaxPeriod>
+					<CorrectionMethod>02</CorrectionMethod>
+					<CorrectionMethodDescription>Rectificación por diferencias</CorrectionMethodDescription>
+					<InvoiceIssueDate>2021-12-08</InvoiceIssueDate>
+				</Corrective>
+			</InvoiceHeader>
+			<InvoiceIssueData>
+				<IssueDate>2021-12-08</IssueDate>
+				<OperationDate>2021-12-08</OperationDate>
+				<InvoiceCurrencyCode>EUR</InvoiceCurrencyCode>
+				<TaxCurrencyCode>EUR</TaxCurrencyCode>
+				<LanguageName>es</LanguageName>
+			</InvoiceIssueData>
+			<TaxesOutputs>
+				<Tax>
+					<TaxTypeCode>01</TaxTypeCode>
+					<TaxRate>21.0</TaxRate>
+					<TaxableBase>
+						<TotalAmount>-4202.00</TotalAmount>
+					</TaxableBase>
+					<TaxAmount>
+						<TotalAmount>-882.42</TotalAmount>
+					</TaxAmount>
+				</Tax>
+			</TaxesOutputs>
+			<InvoiceTotals>
+				<TotalGrossAmount>-4202.00</TotalGrossAmount>
+				<TotalGrossAmountBeforeTaxes>-4202.00</TotalGrossAmountBeforeTaxes>
+				<TotalTaxOutputs>-882.42</TotalTaxOutputs>
+				<TotalTaxesWithheld>0.00</TotalTaxesWithheld>
+				<InvoiceTotal>-5084.42</InvoiceTotal>
+				<TotalOutstandingAmount>-5084.42</TotalOutstandingAmount>
+				<TotalExecutableAmount>-5084.42</TotalExecutableAmount>
+			</InvoiceTotals>
+			<Items>
+				<InvoiceLine>
+					<ItemDescription>Operations and development - day rate</ItemDescription>
+					<Quantity>-20</Quantity>
+					<UnitPriceWithoutTax>200</UnitPriceWithoutTax>
+					<TotalCost>-4000.00</TotalCost>
+					<GrossAmount>-4000.00</GrossAmount>
+					<TaxesOutputs>
+						<Tax>
+							<TaxTypeCode>01</TaxTypeCode>
+							<TaxRate>21.0</TaxRate>
+							<TaxableBase>
+								<TotalAmount>-4000.00</TotalAmount>
+							</TaxableBase>
+							<TaxAmount>
+								<TotalAmount>-840.00</TotalAmount>
+							</TaxAmount>
+						</Tax>
+					</TaxesOutputs>
+				</InvoiceLine>
+				<InvoiceLine>
+					<ItemDescription>Additional Overtime</ItemDescription>
+					<Quantity>-2</Quantity>
+					<UnitPriceWithoutTax>101</UnitPriceWithoutTax>
+					<TotalCost>-202.00</TotalCost>
+					<GrossAmount>-202.00</GrossAmount>
+					<TaxesOutputs>
+						<Tax>
+							<TaxTypeCode>01</TaxTypeCode>
+							<TaxRate>21.0</TaxRate>
+							<TaxableBase>
+								<TotalAmount>-202.00</TotalAmount>
+							</TaxableBase>
+							<TaxAmount>
+								<TotalAmount>-42.42</TotalAmount>
+							</TaxAmount>
+						</Tax>
+					</TaxesOutputs>
+				</InvoiceLine>
+			</Items>
+			<AdditionalData>
+				<InvoiceAdditionalInformation>Thank you for your custom!</InvoiceAdditionalInformation>
+			</AdditionalData>
+		</Invoice>
+	</Invoices>
+	<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="Signature-6df27ecc-d23d-11ee-b20e-8e3f6d4fff0a-Signature">
+		<ds:SignedInfo>
+			<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+			<ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"></ds:SignatureMethod>
+			<ds:Reference Id="Reference-6df27ecc-d23d-11ee-b20e-8e3f6d4fff0a" Type="http://www.w3.org/2000/09/xmldsig#Object" URI="">
+				<ds:Transforms>
+					<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+				</ds:Transforms>
+				<ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></ds:DigestMethod>
+				<ds:DigestValue>T6oVps6ivQHoi3EAjosW72kAGTU+g81rjU0HvfboBA0ZN4EGNFqcKek3vORso3dA2dSeiH7VrVZARP9DUj1LBQ==</ds:DigestValue>
+			</ds:Reference>
+			<ds:Reference URI="#Certificate-6df27ecc-d23d-11ee-b20e-8e3f6d4fff0a">
+				<ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></ds:DigestMethod>
+				<ds:DigestValue>m10t+zmpF5uJzw0zF6rFNWdktpfgLCO35r4B3u12jZVhyQW5ZylyXiGq3sDvLoIyWLA72HSh3QR4uJ4aRZjIOA==</ds:DigestValue>
+			</ds:Reference>
+			<ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature-6df27ecc-d23d-11ee-b20e-8e3f6d4fff0a-SignedProperties">
+				<ds:Transforms>
+					<ds:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:Transform>
+				</ds:Transforms>
+				<ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></ds:DigestMethod>
+				<ds:DigestValue>T1ZOJD1zVfj2fQSbVL25zpzLxsZr+zTn/38vXTBfYgL/+8Dh81fdoA+pFLkU1B2KQkF0vtKmNdjDhh9Ctn/9Kw==</ds:DigestValue>
+			</ds:Reference>
+		</ds:SignedInfo>
+		<ds:SignatureValue Id="Signature-6df27ecc-d23d-11ee-b20e-8e3f6d4fff0a-SignatureValue">by8Swo6oHRUhQZCND18AtEVOkRRTrBAw/N5lAE3kNAsKwVu7rN/5xWIcBLAK3GuqC5evaREeUIuwMysihJ+xfz476Lt5M+9kmXie1S5QwjO+V+ryYR8NAUshLgCV6G9WfH4chuN1Okd02yHS3eZsXf7BED9u69Nq3P+sY8FIwB4HoXM241G7fWGElLQJgm29GAhm4E3ZSZBljRM3kV0nlGFEEggHtwzjl18rz+BuiSA/qoVIZINC2aFN4WFMOrtKoR+WvIKWOqh066bM/9T5+mA9/tpM6lC/GJ3vuT5gKsX0wS8GrJMz3vIzf3ZJFvJPoZRTchDfdH5lYgXysNiBgA==</ds:SignatureValue>
+		<ds:KeyInfo Id="Certificate-6df27ecc-d23d-11ee-b20e-8e3f6d4fff0a">
+			<ds:X509Data>
+				<ds:X509Certificate>MIIHhjCCBm6gAwIBAgIQSOSlyjvRFUlfo/hUFNAvqDANBgkqhkiG9w0BAQsFADBLMQswCQYDVQQGEwJFUzERMA8GA1UECgwIRk5NVC1SQ00xDjAMBgNVBAsMBUNlcmVzMRkwFwYDVQQDDBBBQyBGTk1UIFVzdWFyaW9zMB4XDTIwMTEwNTEzMDQyMFoXDTI0MTEwNTEzMDQyMFowgYUxCzAJBgNVBAYTAkVTMRgwFgYDVQQFEw9JRENFUy05OTk5OTk5OVIxEDAOBgNVBCoMB1BSVUVCQVMxGjAYBgNVBAQMEUVJREFTIENFUlRJRklDQURPMS4wLAYDVQQDDCVFSURBUyBDRVJUSUZJQ0FETyBQUlVFQkFTIC0gOTk5OTk5OTlSMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAujAnB2L5X2Bm42S5f/axKFu1QsAcZGJAeYELZZJ04jriBu3E8V3Rus3tUxfQ+ylqBm0bNWgHfP+gekosHaYoJNQmAVBuwpd183uHksTRUtbeOAFS2xd7v29stM7ARkec+WVV+SK8G6HECIB0VIAMoB2tVs0y6XRVRcjE4I7kH1h3ZbMIzvW43B4hxruYtXcvozGwvZpxQKVrjEY8IXH5+aXHM8WLCba4I06FyhvI+2/9WUPN2YvDoml7lQM4edgepTEZifq2ZPHGpCC5NhSXj2ab5FtnGTMgUaWH6tCljT0kOdfJBOHnIWOw4dBdgkik2CuxwGyMrq/P5VqQIC2hXQIDAQABo4IEKTCCBCUwgZIGA1UdEQSBijCBh4Edc29wb3J0ZV90ZWNuaWNvX2NlcmVzQGZubXQuZXOkZjBkMRgwFgYJKwYBBAGsZgEEDAk5OTk5OTk5OVIxGjAYBgkrBgEEAaxmAQMMC0NFUlRJRklDQURPMRQwEgYJKwYBBAGsZgECDAVFSURBUzEWMBQGCSsGAQQBrGYBAQwHUFJVRUJBUzAMBgNVHRMBAf8EAjAAMA4GA1UdDwEB/wQEAwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwHQYDVR0OBBYEFE5aHiQQRwVYJzmmkfG/i5MxmMNdMB8GA1UdIwQYMBaAFLHUT8QjefpEBQnG6znP6DWwuCBkMIGCBggrBgEFBQcBAQR2MHQwPQYIKwYBBQUHMAGGMWh0dHA6Ly9vY3NwdXN1LmNlcnQuZm5tdC5lcy9vY3NwdXN1L09jc3BSZXNwb25kZXIwMwYIKwYBBQUHMAKGJ2h0dHA6Ly93d3cuY2VydC5mbm10LmVzL2NlcnRzL0FDVVNVLmNydDCCARUGA1UdIASCAQwwggEIMIH6BgorBgEEAaxmAwoBMIHrMCkGCCsGAQUFBwIBFh1odHRwOi8vd3d3LmNlcnQuZm5tdC5lcy9kcGNzLzCBvQYIKwYBBQUHAgIwgbAMga1DZXJ0aWZpY2FkbyBjdWFsaWZpY2FkbyBkZSBmaXJtYSBlbGVjdHLDs25pY2EuIFN1amV0byBhIGxhcyBjb25kaWNpb25lcyBkZSB1c28gZXhwdWVzdGFzIGVuIGxhIERQQyBkZSBsYSBGTk1ULVJDTSBjb24gTklGOiBRMjgyNjAwNC1KIChDL0pvcmdlIEp1YW4gMTA2LTI4MDA5LU1hZHJpZC1Fc3Bhw7FhKTAJBgcEAIvsQAEAMIG6BggrBgEFBQcBAwSBrTCBqjAIBgYEAI5GAQEwCwYGBACORgEDAgEPMBMGBgQAjkYBBjAJBgcEAI5GAQYBMHwGBgQAjkYBBTByMDcWMWh0dHBzOi8vd3d3LmNlcnQuZm5tdC5lcy9wZHMvUERTQUNVc3Vhcmlvc19lcy5wZGYTAmVzMDcWMWh0dHBzOi8vd3d3LmNlcnQuZm5tdC5lcy9wZHMvUERTQUNVc3Vhcmlvc19lbi5wZGYTAmVuMIG1BgNVHR8Ega0wgaowgaeggaSggaGGgZ5sZGFwOi8vbGRhcHVzdS5jZXJ0LmZubXQuZXMvY249Q1JMMzc0OCxjbj1BQyUyMEZOTVQlMjBVc3VhcmlvcyxvdT1DRVJFUyxvPUZOTVQtUkNNLGM9RVM/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdDtiaW5hcnk/YmFzZT9vYmplY3RjbGFzcz1jUkxEaXN0cmlidXRpb25Qb2ludDANBgkqhkiG9w0BAQsFAAOCAQEAH4t5/v/SLsm/dXRDw4QblCmTX+5pgXJ+4G1Lb3KTSPtDJ0UbQiAMUx+iqDDOoMHU5H7po/HZLJXgNwvKLoiLbl5/q6Mqasif87fa6awNkuz/Y6dvXw0UOJh+Ud/Wrk0EyaP9ZtrLVsraUOobNyS6g+lOrCxRrNxGRK2yAeotO6LEo1y3b7CB+Amd2jDq8lY3AtCYlrhuCaTf0AD9IBYYmigHzFD/VH5a8uG95l6J85FQG7tMsG6UQHFM2EmNhpbrYH+ihetz3UhzcC5Fd/P1X7pGBymQgbCyBjCRf/HEVzyoHL72uMp2I4JXX4v8HABZT8xtlDY4LE0am9keJhaNcg==</ds:X509Certificate>
+			</ds:X509Data>
+			<ds:KeyValue>
+				<ds:RSAKeyValue>
+					<ds:Modulus>ujAnB2L5X2Bm42S5f/axKFu1QsAcZGJAeYELZZJ04jriBu3E8V3Rus3tUxfQ+ylqBm0bNWgHfP+gekosHaYoJNQmAVBuwpd183uHksTRUtbeOAFS2xd7v29stM7ARkec+WVV+SK8G6HECIB0VIAMoB2tVs0y6XRVRcjE4I7kH1h3ZbMIzvW43B4hxruYtXcvozGwvZpxQKVrjEY8IXH5+aXHM8WLCba4I06FyhvI+2/9WUPN2YvDoml7lQM4edgepTEZifq2ZPHGpCC5NhSXj2ab5FtnGTMgUaWH6tCljT0kOdfJBOHnIWOw4dBdgkik2CuxwGyMrq/P5VqQIC2hXQ==</ds:Modulus>
+					<ds:Exponent>AQAB</ds:Exponent>
+				</ds:RSAKeyValue>
+			</ds:KeyValue>
+		</ds:KeyInfo>
+		<ds:Object>
+			<xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" Id="Signature-6df27ecc-d23d-11ee-b20e-8e3f6d4fff0a-QualifyingProperties" Target="#Signature-6df27ecc-d23d-11ee-b20e-8e3f6d4fff0a-Signature">
+				<xades:SignedProperties Id="Signature-6df27ecc-d23d-11ee-b20e-8e3f6d4fff0a-SignedProperties">
+					<xades:SignedSignatureProperties>
+						<xades:SigningTime>2025-01-01T00:00:00+00:00</xades:SigningTime>
+						<xades:SigningCertificate>
+							<xades:Cert>
+								<xades:CertDigest>
+									<ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></ds:DigestMethod>
+									<ds:DigestValue>VmNYwDiCBBXJX/IL1AUYj7uHouM2Jcp3ZkeqmB+FKGTTwXIIZnCWmZVhCSB7uNoV6Xee7nZVkMqeCMQk3tGR0g==</ds:DigestValue>
+								</xades:CertDigest>
+								<xades:IssuerSerial>
+									<ds:X509IssuerName>CN=AC FNMT Usuarios,OU=Ceres,O=FNMT-RCM,C=ES</ds:X509IssuerName>
+									<ds:X509SerialNumber>96891622000445695554354105786026700712</ds:X509SerialNumber>
+								</xades:IssuerSerial>
+							</xades:Cert>
+						</xades:SigningCertificate>
+						<xades:SignaturePolicyIdentifier>
+							<xades:SignaturePolicyId>
+								<xades:SigPolicyId>
+									<xades:Identifier>http://www.facturae.es/politica_de_firma_formato_facturae/politica_de_firma_formato_facturae_v3_1.pdf</xades:Identifier>
+									<xades:Description>Política de Firma FacturaE v3.1</xades:Description>
+								</xades:SigPolicyId>
+								<xades:SigPolicyHash>
+									<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+									<ds:DigestValue>Ohixl6upD6av8N7pEvDABhEL6hM=</ds:DigestValue>
+								</xades:SigPolicyHash>
+							</xades:SignaturePolicyId>
+						</xades:SignaturePolicyIdentifier>
+						<xades:SignerRole>
+							<xades:ClaimedRoles>
+								<xades:ClaimedRole>third party</xades:ClaimedRole>
+							</xades:ClaimedRoles>
+						</xades:SignerRole>
+					</xades:SignedSignatureProperties>
+					<xades:SignedDataObjectProperties>
+						<xades:DataObjectFormat ObjectReference="#Reference-6df27ecc-d23d-11ee-b20e-8e3f6d4fff0a">
+							<xades:Description>Factura Electrónica</xades:Description>
+							<xades:ObjectIdentifier>
+								<xades:Identifier Qualifier="OIDAsURN">urn:oid:1.2.840.10003.5.109.10</xades:Identifier>
+							</xades:ObjectIdentifier>
+							<xades:MimeType>text/xml</xades:MimeType>
+						</xades:DataObjectFormat>
+					</xades:SignedDataObjectProperties>
+				</xades:SignedProperties>
+			</xades:QualifyingProperties>
+		</ds:Object>
+	</ds:Signature>
+</fe:Facturae>

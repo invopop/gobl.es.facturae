@@ -25,28 +25,28 @@ const (
 
 // FileHeader contains the FileHeader element of a facturae invoice
 type FileHeader struct {
-	SchemaVersion     string
-	Modality          string
-	InvoiceIssuerType string      // Who is signing the invoice?
-	ThirdParty        *ThirdParty `xml:",omitempty"`
-	Batch             *Batch
+	SchemaVersion     string      `xml:"SchemaVersion"`
+	Modality          string      `xml:"Modality"`
+	InvoiceIssuerType string      `xml:"InvoiceIssuerType"` // Who is signing the invoice?
+	ThirdParty        *ThirdParty `xml:"ThirdParty,omitempty"`
+	Batch             *Batch      `xml:"Batch"`
 }
 
 // ThirdParty is used to identify an intermediary building and issuing the invoice.
 type ThirdParty struct {
-	TaxIdentification *TaxID
-	LegalEntity       *LegalEntity
+	TaxIdentification *TaxID       `xml:"TaxIdentification"`
+	LegalEntity       *LegalEntity `xml:"LegalEntity"`
 }
 
 // Batch would contain info about a group of invoices that are submitted
 // at the same time, but we only allow one invoice at a time
 type Batch struct {
-	BatchIdentifier        string
-	InvoicesCount          int
-	TotalInvoicesAmount    Amount
-	TotalOutstandingAmount Amount
-	TotalExecutableAmount  Amount
-	InvoiceCurrencyCode    string
+	BatchIdentifier        string `xml:"BatchIdentifier"`
+	InvoicesCount          int    `xml:"InvoicesCount"`
+	TotalInvoicesAmount    Amount `xml:"TotalInvoicesAmount"`
+	TotalOutstandingAmount Amount `xml:"TotalOutstandingAmount"`
+	TotalExecutableAmount  Amount `xml:"TotalExecutableAmount"`
+	InvoiceCurrencyCode    string `xml:"InvoiceCurrencyCode"`
 }
 
 func newFileHeader(invoice *bill.Invoice, tp *ThirdParty) *FileHeader {

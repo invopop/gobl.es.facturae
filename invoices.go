@@ -1,7 +1,7 @@
 package facturae
 
 import (
-	"github.com/invopop/gobl/addons/es/facturae"
+	addon "github.com/invopop/gobl.es.facturae/addon"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cal"
 	"github.com/invopop/gobl/num"
@@ -17,59 +17,59 @@ type Invoices struct {
 
 // Invoice contains info about a single invoice
 type Invoice struct {
-	InvoiceHeader    *InvoiceHeader
-	InvoiceIssueData *InvoiceIssueData
-	TaxesOutputs     *TaxSummary `xml:",omitempty"`
-	TaxesWithheld    *TaxSummary `xml:",omitempty"`
-	InvoiceTotals    *InvoiceTotals
-	Items            *Items
-	PaymentDetails   *PaymentDetails `xml:",omitempty"`
-	LegalLiterals    *LegalLiterals  `xml:",omitempty"`
-	AdditionalData   *AdditionalData `xml:",omitempty"`
+	InvoiceHeader    *InvoiceHeader    `xml:"InvoiceHeader"`
+	InvoiceIssueData *InvoiceIssueData `xml:"InvoiceIssueData"`
+	TaxesOutputs     *TaxSummary       `xml:"TaxesOutputs,omitempty"`
+	TaxesWithheld    *TaxSummary       `xml:"TaxesWithheld,omitempty"`
+	InvoiceTotals    *InvoiceTotals    `xml:"InvoiceTotals"`
+	Items            *Items            `xml:"Items"`
+	PaymentDetails   *PaymentDetails   `xml:"PaymentDetails,omitempty"`
+	LegalLiterals    *LegalLiterals    `xml:"LegalLiterals,omitempty"`
+	AdditionalData   *AdditionalData   `xml:"AdditionalData,omitempty"`
 }
 
 // InvoiceHeader contains general information of a single invoice
 type InvoiceHeader struct {
-	InvoiceNumber       string
-	InvoiceSeriesCode   string `xml:",omitempty"`
-	InvoiceDocumentType string
-	InvoiceClass        string
-	Corrective          *Corrective `xml:",omitempty"`
+	InvoiceNumber       string      `xml:"InvoiceNumber"`
+	InvoiceSeriesCode   string      `xml:"InvoiceSeriesCode,omitempty"`
+	InvoiceDocumentType string      `xml:"InvoiceDocumentType"`
+	InvoiceClass        string      `xml:"InvoiceClass"`
+	Corrective          *Corrective `xml:"Corrective,omitempty"`
 }
 
 // PeriodDates is used in corrective tax periods to define a date
 // range.
 type PeriodDates struct {
-	StartDate string
-	EndDate   string
+	StartDate string `xml:"StartDate"`
+	EndDate   string `xml:"EndDate"`
 }
 
 // InvoiceIssueData contains information about dates, lang and currencies
 type InvoiceIssueData struct {
-	IssueDate                    string
-	OperationDate                string       `xml:",omitempty"`
-	PlaceOfIssue                 string       `xml:",omitempty"`
-	InvoiceingPeriod             *PeriodDates `xml:",omitempty"`
-	InvoiceCurrencyCode          string
-	ExchangeRateDetails          *ExchangeRateDetails `xml:",omitempty"` // TODO!
-	TaxCurrencyCode              string
-	LanguageName                 string // FIXME: [JUANJO] are we going to support multiple languages?
-	InvoiceDescription           string `xml:",omitempty"` // TODO
-	ReceiverTransactionReference string `xml:",omitempty"` // TODO
-	FileReference                string `xml:",omitempty"` // TODO
-	ReceiverContractReference    string `xml:",omitempty"` // TODO
+	IssueDate                    string               `xml:"IssueDate"`
+	OperationDate                string               `xml:"OperationDate,omitempty"`
+	PlaceOfIssue                 string               `xml:"PlaceOfIssue,omitempty"`
+	InvoiceingPeriod             *PeriodDates         `xml:"InvoiceingPeriod,omitempty"`
+	InvoiceCurrencyCode          string               `xml:"InvoiceCurrencyCode"`
+	ExchangeRateDetails          *ExchangeRateDetails `xml:"ExchangeRateDetails,omitempty"` // TODO!
+	TaxCurrencyCode              string               `xml:"TaxCurrencyCode"`
+	LanguageName                 string               `xml:"LanguageName"`                           // FIXME: [JUANJO] are we going to support multiple languages?
+	InvoiceDescription           string               `xml:"InvoiceDescription,omitempty"`           // TODO
+	ReceiverTransactionReference string               `xml:"ReceiverTransactionReference,omitempty"` // TODO
+	FileReference                string               `xml:"FileReference,omitempty"`                // TODO
+	ReceiverContractReference    string               `xml:"ReceiverContractReference,omitempty"`    // TODO
 }
 
 // LegalLiterals contains an array of legal texts to add to the Invoice in certain situations.
 type LegalLiterals struct {
-	LegalReference []string
+	LegalReference []string `xml:"LegalReference"`
 }
 
 // ExchangeRateDetails describes how to exchange from the invoices currency
 // to euros.
 type ExchangeRateDetails struct {
-	ExchangeRate     string
-	ExchangeRateDate string
+	ExchangeRate     string `xml:"ExchangeRate"`
+	ExchangeRateDate string `xml:"ExchangeRateDate"`
 }
 
 // NewInvoice creates a new invoice with facturae format
@@ -153,8 +153,8 @@ func newInvoiceHeader(inv *bill.Invoice) *InvoiceHeader {
 	}
 
 	if inv.Tax != nil {
-		h.InvoiceDocumentType = inv.Tax.Ext.Get(facturae.ExtKeyDocType).String()
-		h.InvoiceClass = inv.Tax.Ext.Get(facturae.ExtKeyInvoiceClass).String()
+		h.InvoiceDocumentType = inv.Tax.Ext.Get(addon.ExtKeyDocType).String()
+		h.InvoiceClass = inv.Tax.Ext.Get(addon.ExtKeyInvoiceClass).String()
 	}
 
 	// Only one preceding document currently supported
@@ -167,13 +167,13 @@ func newInvoiceHeader(inv *bill.Invoice) *InvoiceHeader {
 
 func newLegalLiterals(inv *bill.Invoice) *LegalLiterals {
 	lits := make([]string, 0)
-	if len(lits) == 0 {
-		return nil
-	}
 	for _, n := range inv.Notes {
 		if n.Key == org.NoteKeyLegal {
 			lits = append(lits, n.Text)
 		}
+	}
+	if len(lits) == 0 {
+		return nil
 	}
 	return &LegalLiterals{
 		LegalReference: lits,

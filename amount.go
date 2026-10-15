@@ -7,8 +7,8 @@ import "github.com/invopop/gobl/num"
 // rule 6; unit prices and tax rates are the regulation's explicit exceptions
 // and do not flow through this type.
 type Amount struct {
-	TotalAmount       string
-	EquivalentInEuros string `xml:",omitempty"` // not used yet!
+	TotalAmount       string `xml:"TotalAmount"`
+	EquivalentInEuros string `xml:"EquivalentInEuros,omitempty"` // not used yet!
 }
 
 // amount renders a GOBL amount as a Facturae monetary string, rounded to

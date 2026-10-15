@@ -10,7 +10,7 @@ import (
 
 func TestPaymentsInfo(t *testing.T) {
 	t.Run("should contain payment details information", func(t *testing.T) {
-		doc, err := test.LoadGOBL("invoice-vat.json")
+		doc, err := test.NewDocumentFrom("invoice-vat.json")
 		require.NoError(t, err)
 
 		xmlInvoice := doc.Invoices.List[0]

@@ -10,7 +10,7 @@ import (
 
 func TestAdditionalData(t *testing.T) {
 	t.Run("should contain a note about line amouts rounding problems", func(t *testing.T) {
-		doc, err := test.LoadGOBL("invoice-vat.json")
+		doc, err := test.NewDocumentFrom("invoice-vat.json")
 		require.NoError(t, err)
 
 		xmlInvoice := doc.Invoices.List[0]

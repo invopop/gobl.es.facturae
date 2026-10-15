@@ -1,7 +1,7 @@
 package facturae
 
 import (
-	"github.com/invopop/gobl/addons/es/facturae"
+	addon "github.com/invopop/gobl.es.facturae/addon"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cal"
 	"github.com/invopop/gobl/cbc"
@@ -14,15 +14,15 @@ import (
 // Details here are a bit sketchy as in practical usage, most companies
 // don't demand this level of detail.
 type Corrective struct {
-	InvoiceNumber               string `xml:",omitempty"`
-	InvoiceSeriesCode           string `xml:",omitempty"`
-	ReasonCode                  string
-	ReasonDescription           string
-	TaxPeriod                   *PeriodDates
-	CorrectionMethod            string
-	CorrectionMethodDescription string
-	AdditionalReasonDescription string `xml:",omitempty"`
-	InvoiceIssueDate            string `xml:",omitempty"`
+	InvoiceNumber               string       `xml:"InvoiceNumber,omitempty"`
+	InvoiceSeriesCode           string       `xml:"InvoiceSeriesCode,omitempty"`
+	ReasonCode                  string       `xml:"ReasonCode"`
+	ReasonDescription           string       `xml:"ReasonDescription"`
+	TaxPeriod                   *PeriodDates `xml:"TaxPeriod"`
+	CorrectionMethod            string       `xml:"CorrectionMethod"`
+	CorrectionMethodDescription string       `xml:"CorrectionMethodDescription"`
+	AdditionalReasonDescription string       `xml:"AdditionalReasonDescription,omitempty"`
+	InvoiceIssueDate            string       `xml:"InvoiceIssueDate,omitempty"`
 }
 
 var methodDefs = &cbc.Definition{
@@ -90,8 +90,8 @@ func newCorrective(inv *bill.Invoice) *Corrective {
 	c.TaxPeriod = newPeriodDates(period)
 
 	// determine the reason from the extension
-	kd := tax.ExtensionForKey(facturae.ExtKeyCorrection)
-	cc := p.Ext.Get(facturae.ExtKeyCorrection)
+	kd := tax.ExtensionForKey(addon.ExtKeyCorrection)
+	cc := p.Ext.Get(addon.ExtKeyCorrection)
 	if row := kd.CodeDef(cc); row != nil {
 		c.ReasonCode = row.Code.String()
 		c.ReasonDescription = row.Name.In(i18n.ES)

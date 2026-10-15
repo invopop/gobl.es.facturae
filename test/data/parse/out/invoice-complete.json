@@ -1,0 +1,247 @@
+{
+	"$schema": "https://gobl.org/draft-0/envelope",
+	"head": {
+		"uuid": "0195ce71-dc9c-72c8-bf2c-9890a4a9f0a2",
+		"dig": {
+			"alg": "sha256",
+			"val": "2b36a701dd9c456f53dbfa308124d8812a6f29ec182278e53b1bb1ead7b32a8a"
+		}
+	},
+	"doc": {
+		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"$regime": "ES",
+		"$addons": [
+			"es-facturae-v3"
+		],
+		"uuid": "0195ce71-dc9c-72c8-bf2c-9890a4a9f0a2",
+		"type": "standard",
+		"series": "SAMPLE",
+		"code": "002",
+		"issue_date": "2024-03-15",
+		"value_date": "2024-03-10",
+		"currency": "EUR",
+		"tax": {
+			"ext": {
+				"es-facturae-doc-type": "FC",
+				"es-facturae-invoice-class": "OO"
+			}
+		},
+		"supplier": {
+			"name": "Provide One S.L.",
+			"tax_id": {
+				"country": "ES",
+				"code": "B98602642"
+			},
+			"people": [
+				{
+					"name": {
+						"given": "Ana",
+						"surname": "García"
+					}
+				}
+			],
+			"addresses": [
+				{
+					"num": "42",
+					"street": "Calle Pradillo",
+					"street_extra": "3",
+					"locality": "Madrid",
+					"region": "Madrid",
+					"code": "28002",
+					"country": "ES"
+				}
+			],
+			"emails": [
+				{
+					"addr": "billing@example.com"
+				}
+			],
+			"telephones": [
+				{
+					"num": "+34910000000"
+				}
+			]
+		},
+		"customer": {
+			"name": "Sample Consumer S.L.",
+			"tax_id": {
+				"country": "ES",
+				"code": "B63272603"
+			},
+			"addresses": [
+				{
+					"num": "1",
+					"street": "Calle Mayor",
+					"locality": "Barcelona",
+					"region": "Barcelona",
+					"code": "08002",
+					"country": "ES"
+				}
+			]
+		},
+		"lines": [
+			{
+				"i": 1,
+				"quantity": "10",
+				"item": {
+					"name": "Development services",
+					"price": "100.00"
+				},
+				"sum": "1000.00",
+				"charges": [
+					{
+						"reason": "Urgent delivery",
+						"percent": "10%",
+						"amount": "100.00"
+					}
+				],
+				"taxes": [
+					{
+						"cat": "VAT",
+						"key": "standard",
+						"rate": "general",
+						"percent": "21.0%"
+					},
+					{
+						"cat": "IRPF",
+						"rate": "pro",
+						"percent": "15.0%"
+					}
+				],
+				"total": "1100.00"
+			},
+			{
+				"i": 2,
+				"quantity": "3",
+				"item": {
+					"name": "Support hours",
+					"price": "45.50"
+				},
+				"sum": "136.50",
+				"discounts": [
+					{
+						"reason": "Loyalty",
+						"amount": "10.00"
+					}
+				],
+				"taxes": [
+					{
+						"cat": "VAT",
+						"key": "standard",
+						"rate": "reduced",
+						"percent": "10.0%"
+					}
+				],
+				"total": "126.50"
+			}
+		],
+		"discounts": [
+			{
+				"i": 1,
+				"reason": "Early payment",
+				"percent": "2%",
+				"amount": "24.53"
+			}
+		],
+		"charges": [
+			{
+				"i": 1,
+				"reason": "Handling",
+				"amount": "15.00"
+			}
+		],
+		"payment": {
+			"advances": [
+				{
+					"date": "2024-03-01",
+					"amount": "100.00"
+				},
+				{
+					"description": "Regional digitalisation grant",
+					"percent": "10%",
+					"amount": "129.56",
+					"ext": {
+						"es-facturae-subsidy": "S"
+					}
+				}
+			],
+			"terms": {
+				"due_dates": [
+					{
+						"date": "2024-04-15",
+						"amount": "533.03"
+					},
+					{
+						"date": "2024-05-15",
+						"amount": "533.03"
+					}
+				],
+				"notes": "Payable by direct debit."
+			},
+			"instructions": {
+				"key": "direct-debit",
+				"direct_debit": {
+					"ref": "MANDATE-001",
+					"account": "ES9121000418450200051332"
+				}
+			}
+		},
+		"totals": {
+			"sum": "1226.50",
+			"discount": "24.53",
+			"charge": "15.00",
+			"total": "1216.97",
+			"taxes": {
+				"categories": [
+					{
+						"code": "VAT",
+						"rates": [
+							{
+								"key": "standard",
+								"base": "1100.00",
+								"percent": "21.0%",
+								"amount": "231.00"
+							},
+							{
+								"key": "standard",
+								"base": "126.50",
+								"percent": "10.0%",
+								"amount": "12.65"
+							}
+						],
+						"amount": "243.65"
+					},
+					{
+						"code": "IRPF",
+						"retained": true,
+						"rates": [
+							{
+								"base": "1100.00",
+								"percent": "15.0%",
+								"amount": "165.00"
+							}
+						],
+						"amount": "165.00"
+					}
+				],
+				"sum": "243.65",
+				"retained": "165.00"
+			},
+			"tax": "243.65",
+			"total_with_tax": "1460.62",
+			"retained_tax": "165.00",
+			"payable": "1295.62",
+			"advance": "229.56",
+			"due": "1066.06"
+		},
+		"notes": [
+			{
+				"key": "legal",
+				"text": "Factura exenta de recargo de equivalencia."
+			},
+			{
+				"text": "Thank you for your business."
+			}
+		]
+	}
+}

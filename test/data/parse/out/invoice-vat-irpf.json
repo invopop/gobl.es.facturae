@@ -1,0 +1,210 @@
+{
+	"$schema": "https://gobl.org/draft-0/envelope",
+	"head": {
+		"uuid": "0195ce71-dc9c-72c8-bf2c-9890a4a9f0a2",
+		"dig": {
+			"alg": "sha256",
+			"val": "a464de2cd219e1fdb5265d8047a32be97d5656344739ca06acdda40b26141fcd"
+		}
+	},
+	"doc": {
+		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"$regime": "ES",
+		"$addons": [
+			"es-facturae-v3"
+		],
+		"uuid": "0195ce71-dc9c-72c8-bf2c-9890a4a9f0a2",
+		"type": "standard",
+		"code": "TEST01002F",
+		"issue_date": "2021-12-08",
+		"currency": "EUR",
+		"tax": {
+			"ext": {
+				"es-facturae-doc-type": "FC",
+				"es-facturae-invoice-class": "OO"
+			}
+		},
+		"supplier": {
+			"name": "Maria Remedios Sanchez Nuñez",
+			"tax_id": {
+				"country": "ES",
+				"code": "37221735F"
+			},
+			"people": [
+				{
+					"name": {
+						"given": "Maria Remedios",
+						"surname": "Sanchez",
+						"surname2": "Nuñez"
+					}
+				}
+			],
+			"addresses": [
+				{
+					"num": "74",
+					"street": "Campo Real",
+					"locality": "Torrejón De La Calzada",
+					"region": "Madrid",
+					"code": "28023",
+					"country": "ES"
+				}
+			],
+			"emails": [
+				{
+					"addr": "msohrjnb3@caramail.com"
+				}
+			],
+			"telephones": [
+				{
+					"num": "+34612123123"
+				}
+			]
+		},
+		"customer": {
+			"name": "Moniward Sl",
+			"tax_id": {
+				"country": "ES",
+				"code": "B77436020"
+			},
+			"addresses": [
+				{
+					"num": "35",
+					"street": "Plaza Horno",
+					"locality": "Nombela",
+					"region": "Toledo",
+					"code": "45083",
+					"country": "ES"
+				}
+			],
+			"emails": [
+				{
+					"addr": "bfn25xf3p@lycos.co.uk"
+				}
+			]
+		},
+		"lines": [
+			{
+				"i": 1,
+				"quantity": "20",
+				"item": {
+					"name": "Operations and development - day rate",
+					"price": "200.00"
+				},
+				"sum": "4000.00",
+				"discounts": [
+					{
+						"reason": "just because",
+						"percent": "5.0%",
+						"amount": "200.00"
+					}
+				],
+				"taxes": [
+					{
+						"cat": "VAT",
+						"key": "standard",
+						"rate": "general",
+						"percent": "21.0%"
+					},
+					{
+						"cat": "IRPF",
+						"rate": "pro",
+						"percent": "15.0%"
+					}
+				],
+				"total": "3800.00"
+			},
+			{
+				"i": 2,
+				"quantity": "2",
+				"item": {
+					"name": "Additional Overtime",
+					"price": "101.00"
+				},
+				"sum": "202.00",
+				"taxes": [
+					{
+						"cat": "VAT",
+						"key": "standard",
+						"rate": "general",
+						"percent": "21.0%"
+					},
+					{
+						"cat": "IRPF",
+						"rate": "pro",
+						"percent": "15.0%"
+					}
+				],
+				"total": "202.00"
+			},
+			{
+				"i": 3,
+				"quantity": "1",
+				"item": {
+					"name": "Extra food costs",
+					"price": "35.00"
+				},
+				"sum": "35.00",
+				"taxes": [
+					{
+						"cat": "VAT",
+						"key": "standard",
+						"rate": "reduced",
+						"percent": "10.0%"
+					}
+				],
+				"total": "35.00"
+			}
+		],
+		"charges": [
+			{
+				"i": 1,
+				"amount": "200.00"
+			}
+		],
+		"totals": {
+			"sum": "4037.00",
+			"charge": "200.00",
+			"total": "4237.00",
+			"taxes": {
+				"categories": [
+					{
+						"code": "VAT",
+						"rates": [
+							{
+								"key": "standard",
+								"base": "4002.00",
+								"percent": "21.0%",
+								"amount": "840.42"
+							},
+							{
+								"key": "standard",
+								"base": "35.00",
+								"percent": "10.0%",
+								"amount": "3.50"
+							}
+						],
+						"amount": "843.92"
+					},
+					{
+						"code": "IRPF",
+						"retained": true,
+						"rates": [
+							{
+								"base": "4002.00",
+								"percent": "15.0%",
+								"amount": "600.30"
+							}
+						],
+						"amount": "600.30"
+					}
+				],
+				"sum": "843.92",
+				"retained": "600.30"
+			},
+			"tax": "843.92",
+			"total_with_tax": "5080.92",
+			"retained_tax": "600.30",
+			"payable": "4480.62"
+		}
+	}
+}

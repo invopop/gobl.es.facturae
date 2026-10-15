@@ -22,7 +22,7 @@ type Parties struct {
 // the invoice
 type Party struct {
 	TaxID                 *TaxID                 `xml:"TaxIdentification,omitempty"`
-	AdministrativeCentres *AdministrativeCentres `xml:",omitempty"`
+	AdministrativeCentres *AdministrativeCentres `xml:"AdministrativeCentres,omitempty"`
 	LegalEntity           *LegalEntity           `xml:"LegalEntity,omitempty"`
 	Individual            *Individual            `xml:"Individual,omitempty"`
 }
@@ -36,32 +36,32 @@ type AdministrativeCentres struct {
 // AdministrativeCentre represents an administrative unit within a
 // public administration
 type AdministrativeCentre struct {
-	CentreCode      string           `xml:",omitempty"`
-	RoleTypeCode    string           `xml:",omitempty"`
-	AddressInSpain  *Address         `xml:",omitempty"`
-	OverseasAddress *OverseasAddress `xml:",omitempty"`
+	CentreCode      string           `xml:"CentreCode,omitempty"`
+	RoleTypeCode    string           `xml:"RoleTypeCode,omitempty"`
+	AddressInSpain  *Address         `xml:"AddressInSpain,omitempty"`
+	OverseasAddress *OverseasAddress `xml:"OverseasAddress,omitempty"`
 }
 
 // LegalEntity stores party info for companies, associations, ...
 type LegalEntity struct {
-	CorporateName   string
-	AddressInSpain  *Address         `xml:",omitempty"`
-	OverseasAddress *OverseasAddress `xml:",omitempty"`
-	ContactDetails  *ContactDetails  `xml:",omitempty"`
+	CorporateName   string           `xml:"CorporateName"`
+	AddressInSpain  *Address         `xml:"AddressInSpain,omitempty"`
+	OverseasAddress *OverseasAddress `xml:"OverseasAddress,omitempty"`
+	ContactDetails  *ContactDetails  `xml:"ContactDetails,omitempty"`
 }
 
 // Individual stores party info for people
 type Individual struct {
-	Name            string
-	FirstSurname    string           `xml:",omitempty"`
-	SecondSurname   string           `xml:",omitempty"`
-	AddressInSpain  *Address         `xml:",omitempty"`
-	OverseasAddress *OverseasAddress `xml:",omitempty"`
-	ContactDetails  *ContactDetails  `xml:",omitempty"`
+	Name            string           `xml:"Name"`
+	FirstSurname    string           `xml:"FirstSurname,omitempty"`
+	SecondSurname   string           `xml:"SecondSurname,omitempty"`
+	AddressInSpain  *Address         `xml:"AddressInSpain,omitempty"`
+	OverseasAddress *OverseasAddress `xml:"OverseasAddress,omitempty"`
+	ContactDetails  *ContactDetails  `xml:"ContactDetails,omitempty"`
 }
 
-// NewIndividual creates info for people
-func NewIndividual(party *org.Party) *Individual {
+// newIndividual creates info for people
+func newIndividual(party *org.Party) *Individual {
 	if len(party.People) == 0 {
 		return nil
 	}
@@ -86,8 +86,8 @@ func NewIndividual(party *org.Party) *Individual {
 	return individual
 }
 
-// NewLegalEntity creates info for companies, associations, ...
-func NewLegalEntity(party *org.Party) *LegalEntity {
+// newLegalEntity creates info for companies, associations, ...
+func newLegalEntity(party *org.Party) *LegalEntity {
 	entity := &LegalEntity{
 		CorporateName:  party.Name,
 		ContactDetails: newContactDetails(party),
@@ -105,12 +105,12 @@ func NewLegalEntity(party *org.Party) *LegalEntity {
 	return entity
 }
 
-// NewAdministrativeCentres creates the administrative centres required for
+// newAdministrativeCentres creates the administrative centres required for
 // invoicing Spanish public administrations. The mapping is:
 // - Role 01 (Oficina Contable): from customer identities
 // - Role 02 (Órgano Gestor): from delivery.receiver
 // - Role 03 (Unidad Tramitadora): from ordering.buyer
-func NewAdministrativeCentres(inv *bill.Invoice) *AdministrativeCentres {
+func newAdministrativeCentres(inv *bill.Invoice) *AdministrativeCentres {
 	var centres []*AdministrativeCentre
 
 	// Role 01 - Oficina Contable: from customer identities

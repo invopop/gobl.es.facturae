@@ -8,30 +8,30 @@ import (
 
 // Items contains info about all the lines in an invoice
 type Items struct {
-	InvoiceLine []*InvoiceLine
+	InvoiceLine []*InvoiceLine `xml:"InvoiceLine"`
 }
 
 // InvoiceLine contains info about a specific line
 type InvoiceLine struct {
-	ItemDescription               string
-	Quantity                      string
-	UnitOfMeasure                 string `xml:",omitempty"`
-	UnitPriceWithoutTax           string
-	TotalCost                     string               // Unit Price * quantity
-	DiscountsAndRebates           *Discounts           `xml:",omitempty"`
-	Charges                       *Charges             `xml:",omitempty"`
-	GrossAmount                   string               // total cost - discount + charges
-	TaxesWithheld                 *TaxSummary          `xml:",omitempty"`
-	TaxesOutputs                  *TaxSummary          `xml:",omitempty"`
-	AdditionalLineItemInformation string               `xml:",omitempty"`
-	SpecialTaxableEvent           *SpecialTaxableEvent `xml:",omitempty"`
+	ItemDescription               string               `xml:"ItemDescription"`
+	Quantity                      string               `xml:"Quantity"`
+	UnitOfMeasure                 string               `xml:"UnitOfMeasure,omitempty"`
+	UnitPriceWithoutTax           string               `xml:"UnitPriceWithoutTax"`
+	TotalCost                     string               `xml:"TotalCost"` // Unit Price * quantity
+	DiscountsAndRebates           *Discounts           `xml:"DiscountsAndRebates,omitempty"`
+	Charges                       *Charges             `xml:"Charges,omitempty"`
+	GrossAmount                   string               `xml:"GrossAmount"` // total cost - discount + charges
+	TaxesWithheld                 *TaxSummary          `xml:"TaxesWithheld,omitempty"`
+	TaxesOutputs                  *TaxSummary          `xml:"TaxesOutputs,omitempty"`
+	AdditionalLineItemInformation string               `xml:"AdditionalLineItemInformation,omitempty"`
+	SpecialTaxableEvent           *SpecialTaxableEvent `xml:"SpecialTaxableEvent,omitempty"`
 }
 
 // SpecialTaxableEvent stores details as to way the invoice line does
 // not need taxes to be applied.
 type SpecialTaxableEvent struct {
-	SpecialTaxableEventCode   SpecialTaxableEventCode
-	SpecialTaxableEventReason string
+	SpecialTaxableEventCode   SpecialTaxableEventCode `xml:"SpecialTaxableEventCode"`
+	SpecialTaxableEventReason string                  `xml:"SpecialTaxableEventReason"`
 }
 
 // SpecialTaxableEventCode used for special invoice lines that do not need taxes

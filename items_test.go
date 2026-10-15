@@ -9,7 +9,7 @@ import (
 )
 
 func TestInvoiceLineIncludingTaxes(t *testing.T) {
-	doc, err := test.LoadGOBL("invoice-vat-irpf-inc.json")
+	doc, err := test.NewDocumentFrom("invoice-vat-irpf-inc.json")
 	require.NoError(t, err)
 
 	xmlInvoice := doc.Invoices.List[0]
@@ -62,7 +62,7 @@ func TestInvoiceLineIncludingTaxes(t *testing.T) {
 }
 
 func TestInvoiceLineTaxNotIncluded(t *testing.T) {
-	doc, err := test.LoadGOBL("invoice-vat-irpf.json")
+	doc, err := test.NewDocumentFrom("invoice-vat-irpf.json")
 	require.NoError(t, err)
 
 	xmlInvoice := doc.Invoices.List[0]
