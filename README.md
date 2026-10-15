@@ -62,34 +62,14 @@ out, err := convert.Export(env, "es-facturae-v3")
 
 Invoices must include the `es-facturae-v3` addon and a customer. Otherwise the export is refused with `convert.ErrNotSupported` and rules faults, such as `ES-FACTURAE-V3-BILL-INVOICE-01` on `$addons`. Documents exported through the register are not signed: use `Export` with `WithCertificate` to sign them.
 
-### CLI
+### Command line
 
-The command line interface is useful when working with languages other than Go.
-
-#### Installation
+This package no longer includes a command-line tool. The `gobl` CLI from [gobl.dev](https://github.com/invopop/gobl.dev) converts GOBL invoices into FacturaE through the GOBL `convert` register. Its output is not signed.
 
 ```bash
-go install github.com/invopop/gobl.es.facturae/cmd/gobl.facturae@latest
-```
+go install github.com/invopop/gobl.dev/cmd/gobl@latest
 
-#### Usage
-
-Convert a GOBL JSON invoice to FacturaE XML:
-
-```bash
-gobl.facturae convert input.json output.xml
-```
-
-With a digital certificate:
-
-```bash
-gobl.facturae convert -c cert.p12 -p password input.json output.xml
-```
-
-The command also supports pipes:
-
-```bash
-cat input.json | gobl.facturae convert > output.xml
+gobl convert invoice.json invoice.xml --to es-facturae-v3
 ```
 
 ## Development

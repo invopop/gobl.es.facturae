@@ -1,30 +1,10 @@
 version: 2
 
-before:
-  hooks:
-    - go mod download
 builds:
-  - id: gobl.facturae
-    env:
-      - CGO_ENABLED=0
-    goos:
-      - linux
-      - windows
-      - darwin
-    main: ./cmd/gobl.facturae
-    binary: gobl.facturae
-
-archives:
-  - id: gobl.facturae
-    ids:
-      - gobl.facturae
-    formats:
-      - tar.gz
-    name_template: "gobl.facturae_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
-    wrap_in_directory: true
+  - skip: true
 
 checksum:
-  name_template: "checksums.txt"
+  disable: true
 snapshot:
   version_template: "{{ .Tag }}"
 changelog:
