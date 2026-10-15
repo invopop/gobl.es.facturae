@@ -6,14 +6,14 @@ import (
 
 // ContactDetails store info about how to contact the party
 type ContactDetails struct {
-	Telephone                string `xml:",omitempty"`
-	TeleFax                  string `xml:",omitempty"`
-	WebAddress               string `xml:",omitempty"`
-	ElectronicMail           string `xml:",omitempty"`
-	ContactPersons           string `xml:",omitempty"`
-	CnoCnae                  string `xml:",omitempty"` // Code of economic activity from INE
-	INETownCode              string `xml:",omitempty"` // Code of town allocated by INE
-	AdditionalContactDetails string `xml:",omitempty"`
+	Telephone                string `xml:"Telephone,omitempty"`
+	TeleFax                  string `xml:"TeleFax,omitempty"`
+	WebAddress               string `xml:"WebAddress,omitempty"`
+	ElectronicMail           string `xml:"ElectronicMail,omitempty"`
+	ContactPersons           string `xml:"ContactPersons,omitempty"`
+	CnoCnae                  string `xml:"CnoCnae,omitempty"`     // Code of economic activity from INE
+	INETownCode              string `xml:"INETownCode,omitempty"` // Code of town allocated by INE
+	AdditionalContactDetails string `xml:"AdditionalContactDetails,omitempty"`
 }
 
 func newContactDetails(party *org.Party) *ContactDetails {

@@ -14,15 +14,15 @@ import (
 // Details here are a bit sketchy as in practical usage, most companies
 // don't demand this level of detail.
 type Corrective struct {
-	InvoiceNumber               string `xml:",omitempty"`
-	InvoiceSeriesCode           string `xml:",omitempty"`
-	ReasonCode                  string
-	ReasonDescription           string
-	TaxPeriod                   *PeriodDates
-	CorrectionMethod            string
-	CorrectionMethodDescription string
-	AdditionalReasonDescription string `xml:",omitempty"`
-	InvoiceIssueDate            string `xml:",omitempty"`
+	InvoiceNumber               string       `xml:"InvoiceNumber,omitempty"`
+	InvoiceSeriesCode           string       `xml:"InvoiceSeriesCode,omitempty"`
+	ReasonCode                  string       `xml:"ReasonCode"`
+	ReasonDescription           string       `xml:"ReasonDescription"`
+	TaxPeriod                   *PeriodDates `xml:"TaxPeriod"`
+	CorrectionMethod            string       `xml:"CorrectionMethod"`
+	CorrectionMethodDescription string       `xml:"CorrectionMethodDescription"`
+	AdditionalReasonDescription string       `xml:"AdditionalReasonDescription,omitempty"`
+	InvoiceIssueDate            string       `xml:"InvoiceIssueDate,omitempty"`
 }
 
 var methodDefs = &cbc.Definition{

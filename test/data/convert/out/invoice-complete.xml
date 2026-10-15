@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fe:Facturae xmlns:fe="http://www.facturae.gob.es/formato/Versiones/Facturaev3_2_2.xml">
+	<FileHeader>
+		<SchemaVersion>3.2.2</SchemaVersion>
+		<Modality>I</Modality>
+		<InvoiceIssuerType>TE</InvoiceIssuerType>
+		<ThirdParty>
+			<TaxIdentification>
+				<PersonTypeCode>J</PersonTypeCode>
+				<ResidenceTypeCode>R</ResidenceTypeCode>
+				<TaxIdentificationNumber>B23103039</TaxIdentificationNumber>
+			</TaxIdentification>
+			<LegalEntity>
+				<CorporateName>Hypeprop S.L.</CorporateName>
+				<AddressInSpain>
+					<Address>Calle Campo Real 74</Address>
+					<PostCode>28023</PostCode>
+					<Town>Torrejón De La Calzada</Town>
+					<Province>Madrid</Province>
+					<CountryCode>ESP</CountryCode>
+				</AddressInSpain>
+			</LegalEntity>
+		</ThirdParty>
+		<Batch>
+			<BatchIdentifier>B98602642-002</BatchIdentifier>
+			<InvoicesCount>1</InvoicesCount>
+			<TotalInvoicesAmount>
+				<TotalAmount>1460.62</TotalAmount>
+			</TotalInvoicesAmount>
+			<TotalOutstandingAmount>
+				<TotalAmount>1295.62</TotalAmount>
+			</TotalOutstandingAmount>
+			<TotalExecutableAmount>
+				<TotalAmount>1295.62</TotalAmount>
+			</TotalExecutableAmount>
+			<InvoiceCurrencyCode>EUR</InvoiceCurrencyCode>
+		</Batch>
+	</FileHeader>
+	<Parties>
+		<SellerParty>
+			<TaxIdentification>
+				<PersonTypeCode>J</PersonTypeCode>
+				<ResidenceTypeCode>R</ResidenceTypeCode>
+				<TaxIdentificationNumber>B98602642</TaxIdentificationNumber>
+			</TaxIdentification>
+			<LegalEntity>
+				<CorporateName>Provide One S.L.</CorporateName>
+				<AddressInSpain>
+					<Address>Calle Pradillo, 42, 3</Address>
+					<PostCode>28002</PostCode>
+					<Town>Madrid</Town>
+					<Province>Madrid</Province>
+					<CountryCode>ESP</CountryCode>
+				</AddressInSpain>
+				<ContactDetails>
+					<Telephone>+34910000000</Telephone>
+					<ElectronicMail>billing@example.com</ElectronicMail>
+					<ContactPersons>Ana García</ContactPersons>
+				</ContactDetails>
+			</LegalEntity>
+		</SellerParty>
+		<BuyerParty>
+			<TaxIdentification>
+				<PersonTypeCode>J</PersonTypeCode>
+				<ResidenceTypeCode>R</ResidenceTypeCode>
+				<TaxIdentificationNumber>B63272603</TaxIdentificationNumber>
+			</TaxIdentification>
+			<LegalEntity>
+				<CorporateName>Sample Consumer S.L.</CorporateName>
+				<AddressInSpain>
+					<Address>Calle Mayor, 1</Address>
+					<PostCode>08002</PostCode>
+					<Town>Barcelona</Town>
+					<Province>Barcelona</Province>
+					<CountryCode>ESP</CountryCode>
+				</AddressInSpain>
+				<ContactDetails></ContactDetails>
+			</LegalEntity>
+		</BuyerParty>
+	</Parties>
+	<Invoices>
+		<Invoice>
+			<InvoiceHeader>
+				<InvoiceNumber>002</InvoiceNumber>
+				<InvoiceSeriesCode>SAMPLE</InvoiceSeriesCode>
+				<InvoiceDocumentType>FC</InvoiceDocumentType>
+				<InvoiceClass>OO</InvoiceClass>
+			</InvoiceHeader>
+			<InvoiceIssueData>
+				<IssueDate>2024-03-15</IssueDate>
+				<OperationDate>2024-03-10</OperationDate>
+				<InvoiceCurrencyCode>EUR</InvoiceCurrencyCode>
+				<TaxCurrencyCode>EUR</TaxCurrencyCode>
+				<LanguageName>es</LanguageName>
+			</InvoiceIssueData>
+			<TaxesOutputs>
+				<Tax>
+					<TaxTypeCode>01</TaxTypeCode>
+					<TaxRate>21.0</TaxRate>
+					<TaxableBase>
+						<TotalAmount>1100.00</TotalAmount>
+					</TaxableBase>
+					<TaxAmount>
+						<TotalAmount>231.00</TotalAmount>
+					</TaxAmount>
+				</Tax>
+				<Tax>
+					<TaxTypeCode>01</TaxTypeCode>
+					<TaxRate>10.0</TaxRate>
+					<TaxableBase>
+						<TotalAmount>126.50</TotalAmount>
+					</TaxableBase>
+					<TaxAmount>
+						<TotalAmount>12.65</TotalAmount>
+					</TaxAmount>
+				</Tax>
+			</TaxesOutputs>
+			<TaxesWithheld>
+				<Tax>
+					<TaxTypeCode>04</TaxTypeCode>
+					<TaxRate>15.0</TaxRate>
+					<TaxableBase>
+						<TotalAmount>1100.00</TotalAmount>
+					</TaxableBase>
+					<TaxAmount>
+						<TotalAmount>165.00</TotalAmount>
+					</TaxAmount>
+				</Tax>
+			</TaxesWithheld>
+			<InvoiceTotals>
+				<TotalGrossAmount>1226.50</TotalGrossAmount>
+				<GeneralDiscounts>
+					<Discount>
+						<DiscountReason>Early payment</DiscountReason>
+						<DiscountRate>2</DiscountRate>
+						<DiscountAmount>24.53</DiscountAmount>
+					</Discount>
+				</GeneralDiscounts>
+				<GeneralSurcharges>
+					<Charge>
+						<ChargeReason>Handling</ChargeReason>
+						<ChargeAmount>15.00</ChargeAmount>
+					</Charge>
+				</GeneralSurcharges>
+				<TotalGeneralDiscounts>24.53</TotalGeneralDiscounts>
+				<TotalGeneralSurcharges>15.00</TotalGeneralSurcharges>
+				<TotalGrossAmountBeforeTaxes>1216.97</TotalGrossAmountBeforeTaxes>
+				<TotalTaxOutputs>243.65</TotalTaxOutputs>
+				<TotalTaxesWithheld>165.00</TotalTaxesWithheld>
+				<InvoiceTotal>1460.62</InvoiceTotal>
+				<Subsidies>
+					<Subsidy>
+						<SubsidyDescription>Regional digitalisation grant</SubsidyDescription>
+						<SubsidyRate>10</SubsidyRate>
+						<SubsidyAmount>129.56</SubsidyAmount>
+					</Subsidy>
+				</Subsidies>
+				<PaymentsOnAccount>
+					<PaymentOnAccount>
+						<PaymentOnAccountDate>2024-03-01</PaymentOnAccountDate>
+						<PaymentOnAccountAmount>100.00</PaymentOnAccountAmount>
+					</PaymentOnAccount>
+				</PaymentsOnAccount>
+				<TotalOutstandingAmount>1066.06</TotalOutstandingAmount>
+				<TotalPaymentsOnAccount>229.56</TotalPaymentsOnAccount>
+				<TotalExecutableAmount>1066.06</TotalExecutableAmount>
+			</InvoiceTotals>
+			<Items>
+				<InvoiceLine>
+					<ItemDescription>Development services</ItemDescription>
+					<Quantity>10</Quantity>
+					<UnitPriceWithoutTax>100</UnitPriceWithoutTax>
+					<TotalCost>1000.00</TotalCost>
+					<Charges>
+						<Charge>
+							<ChargeReason>Urgent delivery</ChargeReason>
+							<ChargeRate>10</ChargeRate>
+							<ChargeAmount>100.00</ChargeAmount>
+						</Charge>
+					</Charges>
+					<GrossAmount>1100.00</GrossAmount>
+					<TaxesWithheld>
+						<Tax>
+							<TaxTypeCode>04</TaxTypeCode>
+							<TaxRate>15.0</TaxRate>
+							<TaxableBase>
+								<TotalAmount>1100.00</TotalAmount>
+							</TaxableBase>
+							<TaxAmount>
+								<TotalAmount>165.00</TotalAmount>
+							</TaxAmount>
+						</Tax>
+					</TaxesWithheld>
+					<TaxesOutputs>
+						<Tax>
+							<TaxTypeCode>01</TaxTypeCode>
+							<TaxRate>21.0</TaxRate>
+							<TaxableBase>
+								<TotalAmount>1100.00</TotalAmount>
+							</TaxableBase>
+							<TaxAmount>
+								<TotalAmount>231.00</TotalAmount>
+							</TaxAmount>
+						</Tax>
+					</TaxesOutputs>
+				</InvoiceLine>
+				<InvoiceLine>
+					<ItemDescription>Support hours</ItemDescription>
+					<Quantity>3</Quantity>
+					<UnitPriceWithoutTax>45.5</UnitPriceWithoutTax>
+					<TotalCost>136.50</TotalCost>
+					<DiscountsAndRebates>
+						<Discount>
+							<DiscountReason>Loyalty</DiscountReason>
+							<DiscountAmount>10.00</DiscountAmount>
+						</Discount>
+					</DiscountsAndRebates>
+					<GrossAmount>126.50</GrossAmount>
+					<TaxesOutputs>
+						<Tax>
+							<TaxTypeCode>01</TaxTypeCode>
+							<TaxRate>10.0</TaxRate>
+							<TaxableBase>
+								<TotalAmount>126.50</TotalAmount>
+							</TaxableBase>
+							<TaxAmount>
+								<TotalAmount>12.65</TotalAmount>
+							</TaxAmount>
+						</Tax>
+					</TaxesOutputs>
+				</InvoiceLine>
+			</Items>
+			<PaymentDetails>
+				<Installment>
+					<InstallmentDueDate>2024-04-15</InstallmentDueDate>
+					<InstallmentAmount>533.03</InstallmentAmount>
+					<PaymentMeans>02</PaymentMeans>
+					<AccountToBeDebited>
+						<AccountNumber>ES9121000418450200051332</AccountNumber>
+					</AccountToBeDebited>
+					<CollectionAdditionalInformation>Payable by direct debit.</CollectionAdditionalInformation>
+					<DebitReconciliationReference>MANDATE-001</DebitReconciliationReference>
+				</Installment>
+				<Installment>
+					<InstallmentDueDate>2024-05-15</InstallmentDueDate>
+					<InstallmentAmount>533.03</InstallmentAmount>
+					<PaymentMeans>02</PaymentMeans>
+					<AccountToBeDebited>
+						<AccountNumber>ES9121000418450200051332</AccountNumber>
+					</AccountToBeDebited>
+					<CollectionAdditionalInformation>Payable by direct debit.</CollectionAdditionalInformation>
+					<DebitReconciliationReference>MANDATE-001</DebitReconciliationReference>
+				</Installment>
+			</PaymentDetails>
+			<LegalLiterals>
+				<LegalReference>Factura exenta de recargo de equivalencia.</LegalReference>
+			</LegalLiterals>
+			<AdditionalData>
+				<InvoiceAdditionalInformation>Thank you for your business.</InvoiceAdditionalInformation>
+			</AdditionalData>
+		</Invoice>
+	</Invoices>
+	<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="Signature-0195ce71-dc9c-72c8-bf2c-9890a4a9f0b1-Signature">
+		<ds:SignedInfo>
+			<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+			<ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"></ds:SignatureMethod>
+			<ds:Reference Id="Reference-0195ce71-dc9c-72c8-bf2c-9890a4a9f0b1" Type="http://www.w3.org/2000/09/xmldsig#Object" URI="">
+				<ds:Transforms>
+					<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+				</ds:Transforms>
+				<ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></ds:DigestMethod>
+				<ds:DigestValue>bpqQOtFjqVNuaoSG2jcWjX02aYZCVrPvdWCD/W0WOgBT0VEhMEGY4ndUAqUPpceV9iceP3AD2XhLm6vqRmkRmQ==</ds:DigestValue>
+			</ds:Reference>
+			<ds:Reference URI="#Certificate-0195ce71-dc9c-72c8-bf2c-9890a4a9f0b1">
+				<ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></ds:DigestMethod>
+				<ds:DigestValue>NKGbTbAK2DiAPi3R25OeZGdOhMciByv8ZlLnSzBXofANJ2porrhd3Iq/JzqFfDw+/Uy+T5mZgMnl3kxSM8t5MA==</ds:DigestValue>
+			</ds:Reference>
+			<ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature-0195ce71-dc9c-72c8-bf2c-9890a4a9f0b1-SignedProperties">
+				<ds:Transforms>
+					<ds:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:Transform>
+				</ds:Transforms>
+				<ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></ds:DigestMethod>
+				<ds:DigestValue>rqQKidMOO1m3QfsVkknrn/7f1CEzpn5RtawVdseN/J6nqLEe1LVfToViunmeGWhopaysDh03OeurAu0cSUe7vA==</ds:DigestValue>
+			</ds:Reference>
+		</ds:SignedInfo>
+		<ds:SignatureValue Id="Signature-0195ce71-dc9c-72c8-bf2c-9890a4a9f0b1-SignatureValue">PgsKleY0CQQO3cGIwixejzadjlIi37+HsLHPqvrzN2zFuffwGoj4atSMp1pYAHuLXql7YKCDWPAsSUMWk9eg5oxsXyBfH/8TIDc9jpNVvbpR3E4iqqO7XumPEZfQFIBHEv7SmZrpv4+jEFjEDVlxC4rVyG6N63LLyjMMjKLp/aVEKhnasE7+VCVS9VMgjMFhi1j8EAk6LdjVz+4aVR1FsB9TpW2tQckIvIouA268Hvgzkn8qWk4pZfgoxxiJ4IUWIM3S0T3BvqwkkbiLHfeJsKyvT3qqxPijz5Du8CNzzXtrMxqj/8aHAe5VVi9Gfh6Wrxht1eaWgWss88ER2hsEXQ==</ds:SignatureValue>
+		<ds:KeyInfo Id="Certificate-0195ce71-dc9c-72c8-bf2c-9890a4a9f0b1">
+			<ds:X509Data>
+				<ds:X509Certificate>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</ds:X509Certificate>
+			</ds:X509Data>
+			<ds:KeyValue>
+				<ds:RSAKeyValue>
+					<ds:Modulus>ujAnB2L5X2Bm42S5f/axKFu1QsAcZGJAeYELZZJ04jriBu3E8V3Rus3tUxfQ+ylqBm0bNWgHfP+gekosHaYoJNQmAVBuwpd183uHksTRUtbeOAFS2xd7v29stM7ARkec+WVV+SK8G6HECIB0VIAMoB2tVs0y6XRVRcjE4I7kH1h3ZbMIzvW43B4hxruYtXcvozGwvZpxQKVrjEY8IXH5+aXHM8WLCba4I06FyhvI+2/9WUPN2YvDoml7lQM4edgepTEZifq2ZPHGpCC5NhSXj2ab5FtnGTMgUaWH6tCljT0kOdfJBOHnIWOw4dBdgkik2CuxwGyMrq/P5VqQIC2hXQ==</ds:Modulus>
+					<ds:Exponent>AQAB</ds:Exponent>
+				</ds:RSAKeyValue>
+			</ds:KeyValue>
+		</ds:KeyInfo>
+		<ds:Object>
+			<xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" Id="Signature-0195ce71-dc9c-72c8-bf2c-9890a4a9f0b1-QualifyingProperties" Target="#Signature-0195ce71-dc9c-72c8-bf2c-9890a4a9f0b1-Signature">
+				<xades:SignedProperties Id="Signature-0195ce71-dc9c-72c8-bf2c-9890a4a9f0b1-SignedProperties">
+					<xades:SignedSignatureProperties>
+						<xades:SigningTime>2025-01-01T00:00:00+00:00</xades:SigningTime>
+						<xades:SigningCertificate>
+							<xades:Cert>
+								<xades:CertDigest>
+									<ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"></ds:DigestMethod>
+									<ds:DigestValue>VmNYwDiCBBXJX/IL1AUYj7uHouM2Jcp3ZkeqmB+FKGTTwXIIZnCWmZVhCSB7uNoV6Xee7nZVkMqeCMQk3tGR0g==</ds:DigestValue>
+								</xades:CertDigest>
+								<xades:IssuerSerial>
+									<ds:X509IssuerName>CN=AC FNMT Usuarios,OU=Ceres,O=FNMT-RCM,C=ES</ds:X509IssuerName>
+									<ds:X509SerialNumber>96891622000445695554354105786026700712</ds:X509SerialNumber>
+								</xades:IssuerSerial>
+							</xades:Cert>
+						</xades:SigningCertificate>
+						<xades:SignaturePolicyIdentifier>
+							<xades:SignaturePolicyId>
+								<xades:SigPolicyId>
+									<xades:Identifier>http://www.facturae.es/politica_de_firma_formato_facturae/politica_de_firma_formato_facturae_v3_1.pdf</xades:Identifier>
+									<xades:Description>Política de Firma FacturaE v3.1</xades:Description>
+								</xades:SigPolicyId>
+								<xades:SigPolicyHash>
+									<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+									<ds:DigestValue>Ohixl6upD6av8N7pEvDABhEL6hM=</ds:DigestValue>
+								</xades:SigPolicyHash>
+							</xades:SignaturePolicyId>
+						</xades:SignaturePolicyIdentifier>
+						<xades:SignerRole>
+							<xades:ClaimedRoles>
+								<xades:ClaimedRole>third party</xades:ClaimedRole>
+							</xades:ClaimedRoles>
+						</xades:SignerRole>
+					</xades:SignedSignatureProperties>
+					<xades:SignedDataObjectProperties>
+						<xades:DataObjectFormat ObjectReference="#Reference-0195ce71-dc9c-72c8-bf2c-9890a4a9f0b1">
+							<xades:Description>Factura Electrónica</xades:Description>
+							<xades:ObjectIdentifier>
+								<xades:Identifier Qualifier="OIDAsURN">urn:oid:1.2.840.10003.5.109.10</xades:Identifier>
+							</xades:ObjectIdentifier>
+							<xades:MimeType>text/xml</xades:MimeType>
+						</xades:DataObjectFormat>
+					</xades:SignedDataObjectProperties>
+				</xades:SignedProperties>
+			</xades:QualifyingProperties>
+		</ds:Object>
+	</ds:Signature>
+</fe:Facturae>

@@ -9,13 +9,13 @@ import (
 
 // TaxID stores fiscal id
 type TaxID struct {
-	PersonTypeCode          string
-	ResidenceTypeCode       string
-	TaxIdentificationNumber string
+	PersonTypeCode          string `xml:"PersonTypeCode"`
+	ResidenceTypeCode       string `xml:"ResidenceTypeCode"`
+	TaxIdentificationNumber string `xml:"TaxIdentificationNumber"`
 }
 
-// NewTaxID builds the tax identification information of a party
-func NewTaxID(taxNumber cbc.Code, countryCode l10n.TaxCountryCode) *TaxID {
+// newTaxID builds the tax identification information of a party
+func newTaxID(taxNumber cbc.Code, countryCode l10n.TaxCountryCode) *TaxID {
 	return &TaxID{
 		PersonTypeCode:          personTypeCode(taxNumber),
 		ResidenceTypeCode:       residenceTypeCode(countryCode),

@@ -1,8 +1,6 @@
 package facturae
 
 import (
-	"errors"
-
 	"github.com/invopop/gobl"
 	addon "github.com/invopop/gobl.es.facturae/addon"
 	"github.com/invopop/gobl/bill"
@@ -18,10 +16,6 @@ import (
 // KeyFacturaE identifies the FacturaE 3.2.2 format in the GOBL convert
 // register.
 const KeyFacturaE cbc.Key = "es-facturae-v3"
-
-// ErrImportNotSupported is returned when asked to import FacturaE documents,
-// which this package does not do.
-var ErrImportNotSupported = errors.New("facturae import not supported")
 
 var invoiceSchema = schema.Lookup(bill.Invoice{})
 
@@ -39,8 +33,8 @@ func init() {
 	convert.Register(converter{})
 }
 
-// converter registers the FacturaE format with the GOBL convert register,
-// for export only. Exported documents are not signed.
+// converter registers the FacturaE format with the GOBL convert register.
+// Exported documents are not signed.
 type converter struct{}
 
 func (converter) Formats() []*convert.Format {
@@ -51,17 +45,33 @@ func (converter) Formats() []*convert.Format {
 			MIME:      "application/xml",
 			Syntax:    "facturae",
 			Countries: []l10n.Code{l10n.ES},
+			Import:    []schema.ID{invoiceSchema},
 			Export:    []schema.ID{invoiceSchema},
 		},
 	}
 }
 
-func (converter) Detect(_ *convert.Input) cbc.Key {
+type namespaceKey struct{}
+
+// Detect claims FacturaE 3.2.2 documents by their root namespace.
+func (converter) Detect(in *convert.Input) cbc.Key {
+	ns, ok := in.Get(namespaceKey{})
+	if !ok {
+		ns, _ = rootNamespace(in.Data)
+		in.Set(namespaceKey{}, ns)
+	}
+	if ns == NamespaceFacturaE {
+		return KeyFacturaE
+	}
 	return cbc.KeyEmpty
 }
 
-func (converter) Import(_ cbc.Key, _ []byte) (*gobl.Envelope, error) {
-	return nil, ErrImportNotSupported
+func (converter) Import(_ cbc.Key, data []byte) (*gobl.Envelope, error) {
+	doc, err := Decode(data)
+	if err != nil {
+		return nil, err
+	}
+	return Import(doc)
 }
 
 // Accepts checks the invoice includes the FacturaE addon and a customer.

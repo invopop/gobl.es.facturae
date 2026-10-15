@@ -7,19 +7,19 @@ import (
 
 // Address stores location information for addresses in Spain
 type Address struct {
-	Address     string `xml:",omitempty"`
-	PostCode    string `xml:",omitempty"`
-	Town        string `xml:",omitempty"`
-	Province    string `xml:",omitempty"`
-	CountryCode string `xml:",omitempty"`
+	Address     string `xml:"Address,omitempty"`
+	PostCode    string `xml:"PostCode,omitempty"`
+	Town        string `xml:"Town,omitempty"`
+	Province    string `xml:"Province,omitempty"`
+	CountryCode string `xml:"CountryCode,omitempty"`
 }
 
 // OverseasAddress stores location information for addresses outside Spain
 type OverseasAddress struct {
-	Address         string `xml:",omitempty"`
-	PostCodeAndTown string `xml:",omitempty"`
-	Province        string `xml:",omitempty"`
-	CountryCode     string `xml:",omitempty"`
+	Address         string `xml:"Address,omitempty"`
+	PostCodeAndTown string `xml:"PostCodeAndTown,omitempty"`
+	Province        string `xml:"Province,omitempty"`
+	CountryCode     string `xml:"CountryCode,omitempty"`
 }
 
 func newAddress(address *org.Address) *Address {
@@ -50,18 +50,7 @@ func addressLine1(address *org.Address) string {
 		return address.PostOfficeBox
 	}
 
-	return address.Street +
-		", " + address.Number +
-		addressMaybe(address.Block) +
-		addressMaybe(address.Floor) +
-		addressMaybe(address.Door)
-}
-
-func addressMaybe(element string) string {
-	if element != "" {
-		return ", " + element
-	}
-	return ""
+	return joinNonEmpty(", ", address.Street, address.Number, address.Block, address.Floor, address.Door)
 }
 
 // ES is the ISO Alpha-3 code used for Spain

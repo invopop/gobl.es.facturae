@@ -14,22 +14,22 @@ type PaymentDetails struct {
 
 // Installment contains info about each of the payment terms
 type Installment struct {
-	InstallmentDueDate              string
-	InstallmentAmount               string
-	PaymentMeans                    string       `xml:",omitempty"`
-	AccountToBeCredited             *BankAccount `xml:",omitempty"`
-	DebitReconciliationReference    string       `xml:",omitempty"`
-	AccountToBeDebited              *BankAccount `xml:",omitempty"`
-	CollectionAdditionalInformation string       `xml:",omitempty"`
+	InstallmentDueDate              string       `xml:"InstallmentDueDate"`
+	InstallmentAmount               string       `xml:"InstallmentAmount"`
+	PaymentMeans                    string       `xml:"PaymentMeans,omitempty"`
+	AccountToBeCredited             *BankAccount `xml:"AccountToBeCredited,omitempty"`
+	AccountToBeDebited              *BankAccount `xml:"AccountToBeDebited,omitempty"`
+	CollectionAdditionalInformation string       `xml:"CollectionAdditionalInformation,omitempty"`
+	DebitReconciliationReference    string       `xml:"DebitReconciliationReference,omitempty"`
 }
 
 // BankAccount contains info needed to pay by transfer or direct debit
 type BankAccount struct {
-	IBAN                  string   `xml:",omitempty"`
-	AccountNumber         string   `xml:",omitempty"`
-	BranchInSpainAddress  *Address `xml:",omitempty"`
-	OverseasBranchAddress *Address `xml:",omitempty"`
-	BIC                   string   `xml:",omitempty"`
+	IBAN                  string   `xml:"IBAN,omitempty"`
+	AccountNumber         string   `xml:"AccountNumber,omitempty"`
+	BranchInSpainAddress  *Address `xml:"BranchInSpainAddress,omitempty"`
+	OverseasBranchAddress *Address `xml:"OverseasBranchAddress,omitempty"`
+	BIC                   string   `xml:"BIC,omitempty"`
 }
 
 // TODO: move this to the GOBL project directly.
@@ -96,11 +96,15 @@ func newCreditBankAccount(info *pay.CreditTransfer) *BankAccount {
 	if info == nil {
 		return nil
 	}
-	return &BankAccount{
-		IBAN:          info.IBAN.String(),
-		BIC:           info.BIC.String(),
-		AccountNumber: info.Number.String(),
+	// FacturaE accepts either an IBAN or an account number.
+	ba := &BankAccount{
+		IBAN: info.IBAN.String(),
+		BIC:  info.BIC.String(),
 	}
+	if ba.IBAN == "" {
+		ba.AccountNumber = info.Number.String()
+	}
+	return ba
 }
 
 func newDebitBankAccount(info *pay.DirectDebit) *BankAccount {

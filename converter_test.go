@@ -5,6 +5,7 @@ import (
 
 	"github.com/invopop/gobl"
 	facturae "github.com/invopop/gobl.es.facturae"
+	addon "github.com/invopop/gobl.es.facturae/addon"
 	"github.com/invopop/gobl.es.facturae/test"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
@@ -20,7 +21,7 @@ func TestConverterFormat(t *testing.T) {
 	require.NotNil(t, f)
 	assert.Equal(t, cbc.Key("facturae"), f.Syntax)
 	assert.Equal(t, []l10n.Code{l10n.ES}, f.Countries)
-	assert.Empty(t, f.Import, "export only")
+	assert.Len(t, f.Import, 1)
 	assert.Len(t, f.Export, 1)
 }
 
@@ -64,12 +65,32 @@ func TestConverterExport(t *testing.T) {
 		assert.Equal(t, rules.Code("ES-FACTURAE-V3-BILL-INVOICE-02"), faultCode(t, err))
 	})
 
-	t.Run("not detected on import", func(t *testing.T) {
+	t.Run("detected and imported", func(t *testing.T) {
 		env, err := test.LoadTestEnvelope("invoice-vat.json")
 		require.NoError(t, err)
 		out, err := convert.Export(env, facturae.KeyFacturaE)
 		require.NoError(t, err)
-		_, err = convert.Import(out.Data)
-		assert.ErrorIs(t, err, convert.ErrUnknownFormat)
+
+		f, err := convert.Detect(out.Data)
+		require.NoError(t, err)
+		assert.Equal(t, facturae.KeyFacturaE, f.Key)
+
+		imported, err := convert.Import(out.Data)
+		require.NoError(t, err)
+		inv := imported.Extract().(*bill.Invoice)
+		assert.Equal(t, env.Extract().(*bill.Invoice).Totals.Payable.String(), inv.Totals.Payable.String())
+		assert.True(t, addon.V3.In(inv.GetAddons()...))
+	})
+
+	t.Run("other documents not detected", func(t *testing.T) {
+		for _, data := range []string{`<Invoice xmlns="urn:example"/>`, `{}`, ``} {
+			_, err := convert.Detect([]byte(data))
+			assert.ErrorIs(t, err, convert.ErrUnknownFormat)
+		}
+	})
+
+	t.Run("invalid document", func(t *testing.T) {
+		_, err := convert.Import([]byte(`<fe:Facturae xmlns:fe="` + facturae.NamespaceFacturaE + `"><`))
+		assert.Error(t, err)
 	})
 }

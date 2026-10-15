@@ -11,60 +11,60 @@ import (
 
 // InvoiceTotals contains the summary of the amounts in an invoice
 type InvoiceTotals struct {
-	TotalGrossAmount            string     // Without included taxes
-	GeneralDiscounts            *Discounts `xml:",omitempty"`
-	GeneralSurcharges           *Charges   `xml:",omitempty"`
-	TotalGeneralDiscounts       string     `xml:",omitempty"`
-	TotalGeneralSurcharges      string     `xml:",omitempty"`
-	TotalGrossAmountBeforeTaxes string
-	TotalTaxOutputs             string
-	TotalTaxesWithheld          string
-	InvoiceTotal                string
-	Subsidies                   *Subsidies            `xml:",omitempty"`
-	PaymentsOnAccount           *PaymentsOnAccount    `xml:",omitempty"`
-	ReimbursableExpenses        *ReimbursableExpenses `xml:",omitempty"`
-	TotalOutstandingAmount      string                // InvoiceTotal - (Total subvenciones + TotalPaymentsOnAccount)
-	TotalPaymentsOnAccount      string                `xml:",omitempty"`
-	TotalExecutableAmount       string
-	TotalReimbursableExpenses   string `xml:",omitempty"`
+	TotalGrossAmount            string                `xml:"TotalGrossAmount"` // Without included taxes
+	GeneralDiscounts            *Discounts            `xml:"GeneralDiscounts,omitempty"`
+	GeneralSurcharges           *Charges              `xml:"GeneralSurcharges,omitempty"`
+	TotalGeneralDiscounts       string                `xml:"TotalGeneralDiscounts,omitempty"`
+	TotalGeneralSurcharges      string                `xml:"TotalGeneralSurcharges,omitempty"`
+	TotalGrossAmountBeforeTaxes string                `xml:"TotalGrossAmountBeforeTaxes"`
+	TotalTaxOutputs             string                `xml:"TotalTaxOutputs"`
+	TotalTaxesWithheld          string                `xml:"TotalTaxesWithheld"`
+	InvoiceTotal                string                `xml:"InvoiceTotal"`
+	Subsidies                   *Subsidies            `xml:"Subsidies,omitempty"`
+	PaymentsOnAccount           *PaymentsOnAccount    `xml:"PaymentsOnAccount,omitempty"`
+	ReimbursableExpenses        *ReimbursableExpenses `xml:"ReimbursableExpenses,omitempty"`
+	TotalOutstandingAmount      string                `xml:"TotalOutstandingAmount"` // InvoiceTotal - (Total subvenciones + TotalPaymentsOnAccount)
+	TotalPaymentsOnAccount      string                `xml:"TotalPaymentsOnAccount,omitempty"`
+	TotalExecutableAmount       string                `xml:"TotalExecutableAmount"`
+	TotalReimbursableExpenses   string                `xml:"TotalReimbursableExpenses,omitempty"`
 }
 
 // Subsidies is currently a placeholder, as we don't use it yet.
 type Subsidies struct {
-	Subsidy []*Subsidy
+	Subsidy []*Subsidy `xml:"Subsidy"`
 }
 
 // Subsidy is a single subsidy entry
 type Subsidy struct {
-	SubsidyDescription string
-	SubsidyRate        string `xml:",omitempty"`
-	SubsidyAmount      string
+	SubsidyDescription string `xml:"SubsidyDescription"`
+	SubsidyRate        string `xml:"SubsidyRate,omitempty"`
+	SubsidyAmount      string `xml:"SubsidyAmount"`
 }
 
 // PaymentsOnAccount stores payments made in advance.
 type PaymentsOnAccount struct {
-	PaymentOnAccount []*PaymentOnAccount
+	PaymentOnAccount []*PaymentOnAccount `xml:"PaymentOnAccount"`
 }
 
 // PaymentOnAccount is a single advance payment.
 type PaymentOnAccount struct {
-	PaymentOnAccountDate   cal.Date
-	PaymentOnAccountAmount string
+	PaymentOnAccountDate   cal.Date `xml:"PaymentOnAccountDate"`
+	PaymentOnAccountAmount string   `xml:"PaymentOnAccountAmount"`
 }
 
 // ReimbursableExpenses is a group of reimbursable expenses.
 type ReimbursableExpenses struct {
-	ReimbursableExpenses []*ReimbursableExpense
+	ReimbursableExpenses []*ReimbursableExpense `xml:"ReimbursableExpenses"`
 }
 
 // ReimbursableExpense stores info about a single reimbursable expense.
 type ReimbursableExpense struct {
-	ReimbursableExpensesSellerParty *TaxID    `xml:",omitempty"`
-	ReimbursableExpensesBuyerParty  *TaxID    `xml:",omitempty"` // never used!
-	IssueDate                       *cal.Date `xml:",omitempty"`
-	InvoiceNumber                   string    `xml:",omitempty"`
-	InvoiceSeriesCode               string    `xml:",omitempty"`
-	ReimbursableExpensesAmount      string
+	ReimbursableExpensesSellerParty *TaxID    `xml:"ReimbursableExpensesSellerParty,omitempty"`
+	ReimbursableExpensesBuyerParty  *TaxID    `xml:"ReimbursableExpensesBuyerParty,omitempty"` // never used!
+	IssueDate                       *cal.Date `xml:"IssueDate,omitempty"`
+	InvoiceNumber                   string    `xml:"InvoiceNumber,omitempty"`
+	InvoiceSeriesCode               string    `xml:"InvoiceSeriesCode,omitempty"`
+	ReimbursableExpensesAmount      string    `xml:"ReimbursableExpensesAmount"`
 }
 
 func newInvoiceTotals(invoice *bill.Invoice) *InvoiceTotals {
@@ -148,7 +148,7 @@ func (it *InvoiceTotals) setAdvances(advances []*pay.Record) {
 				SubsidyAmount:      amount(a.Amount),
 			}
 			if a.Percent != nil {
-				g.SubsidyRate = a.Percent.String()
+				g.SubsidyRate = a.Percent.StringWithoutSymbol()
 			}
 			grants = append(grants, g)
 		} else {
@@ -186,7 +186,7 @@ func (it *InvoiceTotals) setOutlays(outlays []*bill.Outlay) {
 		if o.Supplier != nil {
 			tid := o.Supplier.TaxID
 			if tid != nil {
-				no.ReimbursableExpensesSellerParty = NewTaxID(tid.Code, tid.Country)
+				no.ReimbursableExpensesSellerParty = newTaxID(tid.Code, tid.Country)
 			}
 		}
 		os = append(os, no)

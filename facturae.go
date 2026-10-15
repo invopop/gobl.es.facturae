@@ -9,6 +9,7 @@ import (
 	"github.com/invopop/gobl"
 	addon "github.com/invopop/gobl.es.facturae/addon"
 	"github.com/invopop/gobl/bill"
+	"github.com/invopop/xmlctx"
 	"github.com/invopop/xmldsig"
 	"github.com/invopop/xmldsig/profiles/facturae"
 )
@@ -16,7 +17,12 @@ import (
 // Namespaces used for FacturaE. DSig stuff is handled in the signatures.
 const (
 	NamespaceFacturaE = "http://www.facturae.gob.es/formato/Versiones/Facturaev3_2_2.xml"
+	NamespaceDSig     = "http://www.w3.org/2000/09/xmldsig#"
 )
+
+// ErrUnsupportedDocument is returned when decoding data that is not a
+// FacturaE 3.2.2 document.
+var ErrUnsupportedDocument = errors.New("unsupported document: expected FacturaE 3.2.2")
 
 // XAdES Signer Roles used for FacturaE
 const (
@@ -33,9 +39,9 @@ type Document struct {
 	XMLName     xml.Name `xml:"fe:Facturae"`
 	FeNamespace string   `xml:"xmlns:fe,attr"`
 
-	FileHeader *FileHeader
-	Parties    *Parties
-	Invoices   *Invoices
+	FileHeader *FileHeader        `xml:"FileHeader"`
+	Parties    *Parties           `xml:"Parties"`
+	Invoices   *Invoices          `xml:"Invoices"`
 	Signature  *xmldsig.Signature `xml:"ds:Signature,omitempty"`
 }
 
@@ -89,7 +95,16 @@ func Export(env *gobl.Envelope, opts ...Option) (*Document, error) {
 	for _, opt := range opts {
 		opt(xmlOpts)
 	}
-	invoice, ok := env.Extract().(*bill.Invoice)
+	if env == nil || env.Document == nil {
+		return nil, errors.New("expected an invoice")
+	}
+	// Work on a copy, as taxes included in prices are removed and credit
+	// notes inverted.
+	obj, err := env.Document.Clone()
+	if err != nil {
+		return nil, fmt.Errorf("copying document: %w", err)
+	}
+	invoice, ok := obj.Instance().(*bill.Invoice)
 	if !ok {
 		return nil, errors.New("expected an invoice")
 	}
@@ -125,23 +140,23 @@ func Export(env *gobl.Envelope, opts ...Option) (*Document, error) {
 		},
 	}
 
-	d.Parties.Seller.TaxID = NewTaxID(invoice.Supplier.TaxID.Code, invoice.Supplier.TaxID.Country)
+	d.Parties.Seller.TaxID = newTaxID(invoice.Supplier.TaxID.Code, invoice.Supplier.TaxID.Country)
 	if d.Parties.Seller.TaxID.PersonTypeCode == "F" {
-		d.Parties.Seller.Individual = NewIndividual(invoice.Supplier)
+		d.Parties.Seller.Individual = newIndividual(invoice.Supplier)
 	} else {
-		d.Parties.Seller.LegalEntity = NewLegalEntity(invoice.Supplier)
+		d.Parties.Seller.LegalEntity = newLegalEntity(invoice.Supplier)
 	}
 
 	if invoice.Customer != nil && invoice.Customer.TaxID != nil {
 		// Simplified invoices are not supported by FacturaE, but this is where
 		// they'd be handled if the situation changes.
 		b := d.Parties.Buyer
-		b.TaxID = NewTaxID(invoice.Customer.TaxID.Code, invoice.Customer.TaxID.Country)
-		b.AdministrativeCentres = NewAdministrativeCentres(invoice)
+		b.TaxID = newTaxID(invoice.Customer.TaxID.Code, invoice.Customer.TaxID.Country)
+		b.AdministrativeCentres = newAdministrativeCentres(invoice)
 		if b.TaxID.PersonTypeCode == "F" {
-			b.Individual = NewIndividual(invoice.Customer)
+			b.Individual = newIndividual(invoice.Customer)
 		} else {
-			b.LegalEntity = NewLegalEntity(invoice.Customer)
+			b.LegalEntity = newLegalEntity(invoice.Customer)
 		}
 	}
 
@@ -191,6 +206,42 @@ func Export(env *gobl.Envelope, opts ...Option) (*Document, error) {
 	}
 
 	return d, nil
+}
+
+// Decode parses FacturaE 3.2.2 XML data into a document. Signatures are
+// read but not verified.
+func Decode(data []byte) (*Document, error) {
+	ns, err := rootNamespace(data)
+	if err != nil {
+		return nil, err
+	}
+	if ns != NamespaceFacturaE {
+		return nil, ErrUnsupportedDocument
+	}
+	doc := new(Document)
+	err = xmlctx.Unmarshal(data, doc, xmlctx.WithNamespaces(map[string]string{
+		"":   "",
+		"fe": NamespaceFacturaE,
+		"ds": NamespaceDSig,
+	}))
+	if err != nil {
+		return nil, err
+	}
+	return doc, nil
+}
+
+// rootNamespace provides the namespace of the data's root element.
+func rootNamespace(data []byte) (string, error) {
+	d := xml.NewDecoder(bytes.NewReader(data))
+	for {
+		tok, err := d.Token()
+		if err != nil {
+			return "", err
+		}
+		if se, ok := tok.(xml.StartElement); ok {
+			return se.Name.Space, nil
+		}
+	}
 }
 
 // Encode provides the FacturaE XML document's bytes, including the XML
