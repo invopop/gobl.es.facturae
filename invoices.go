@@ -4,6 +4,7 @@ import (
 	addon "github.com/invopop/gobl.es.facturae/addon"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cal"
+	"github.com/invopop/gobl/currency"
 	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/org"
 	"github.com/invopop/gobl/tax"
@@ -51,7 +52,7 @@ type InvoiceIssueData struct {
 	PlaceOfIssue                 string               `xml:"PlaceOfIssue,omitempty"`
 	InvoiceingPeriod             *PeriodDates         `xml:"InvoiceingPeriod,omitempty"`
 	InvoiceCurrencyCode          string               `xml:"InvoiceCurrencyCode"`
-	ExchangeRateDetails          *ExchangeRateDetails `xml:"ExchangeRateDetails,omitempty"` // TODO!
+	ExchangeRateDetails          *ExchangeRateDetails `xml:"ExchangeRateDetails,omitempty"`
 	TaxCurrencyCode              string               `xml:"TaxCurrencyCode"`
 	LanguageName                 string               `xml:"LanguageName"`                           // FIXME: [JUANJO] are we going to support multiple languages?
 	InvoiceDescription           string               `xml:"InvoiceDescription,omitempty"`           // TODO
@@ -78,12 +79,14 @@ func (d *Document) newInvoice(invoice *bill.Invoice) *Invoice {
 	if invoice.ValueDate != nil {
 		valueDate = invoice.ValueDate
 	}
+	rate := euroRate(invoice)
 	xmlInvoice := &Invoice{
 		InvoiceHeader: newInvoiceHeader(invoice),
 		InvoiceIssueData: &InvoiceIssueData{
 			IssueDate:           invoice.IssueDate.String(),
 			OperationDate:       valueDate.String(),
 			InvoiceCurrencyCode: string(invoice.Currency),
+			ExchangeRateDetails: newExchangeRateDetails(rate, *valueDate),
 			TaxCurrencyCode:     string(invoice.Currency),
 			LanguageName:        "es",
 		},
@@ -91,16 +94,46 @@ func (d *Document) newInvoice(invoice *bill.Invoice) *Invoice {
 		AdditionalData: newAdditionalData(invoice),
 		PaymentDetails: newPaymentDetails(invoice.Payment),
 		LegalLiterals:  newLegalLiterals(invoice),
-		Items:          newItems(invoice.Lines, invoice.Totals.Taxes),
+		Items:          newItems(invoice.Lines, invoice.Totals.Taxes, rate),
 	}
-	xmlInvoice.setTaxes(invoice.Totals.Taxes)
+	if rate != nil {
+		xmlInvoice.InvoiceIssueData.TaxCurrencyCode = string(currency.EUR)
+	}
+	xmlInvoice.setTaxes(invoice.Totals.Taxes, rate)
 
 	return xmlInvoice
 }
 
+// euroRate provides the rate that converts the invoice's amounts into euros,
+// the tax currency, or nil when the invoice is already in euros.
+func euroRate(inv *bill.Invoice) *currency.ExchangeRate {
+	return currency.MatchExchangeRate(inv.ExchangeRates, inv.Currency, currency.EUR)
+}
+
+// newExchangeRateDetails describes the rate to euros. Without a publication
+// date, the rate is taken as the one in force on the operation date, as
+// required by Art. 79.eleven of Law 37/1992.
+func newExchangeRateDetails(rate *currency.ExchangeRate, operation cal.Date) *ExchangeRateDetails {
+	if rate == nil {
+		return nil
+	}
+	date := operation
+	if rate.At != nil {
+		date = rate.At.Date()
+	}
+	r := rate.Amount
+	if r.Exp() > 8 {
+		r = r.Rescale(8) // the schema allows up to eight decimals
+	}
+	return &ExchangeRateDetails{
+		ExchangeRate:     r.String(),
+		ExchangeRateDate: date.String(),
+	}
+}
+
 // setTaxes performs a set of steps to convert the GOBL tax list into something
 // that FacturaE expects.
-func (inv *Invoice) setTaxes(taxes *tax.Total) {
+func (inv *Invoice) setTaxes(taxes *tax.Total, rate *currency.ExchangeRate) {
 	if taxes == nil {
 		return
 	}
@@ -116,8 +149,8 @@ func (inv *Invoice) setTaxes(taxes *tax.Total) {
 			tax := &Tax{
 				Code:   categoryTaxCodeMap[ct.Code],
 				Rate:   percent.StringWithoutSymbol(),
-				Base:   makeAmount(rt.Base),
-				Amount: makeAmount(rt.Amount),
+				Base:   makeAmount(rt.Base, rate),
+				Amount: makeAmount(rt.Amount, rate),
 			}
 			if ct.Retained {
 				retained = append(retained, tax)
@@ -127,7 +160,7 @@ func (inv *Invoice) setTaxes(taxes *tax.Total) {
 					p := st.Percent
 					p = p.Rescale(4) // we need 2 decimal places
 					tax.Surcharge = p.StringWithoutSymbol()
-					v := makeAmount(st.Amount)
+					v := makeAmount(st.Amount, rate)
 					tax.SurchargeAmount = &v
 				}
 				regular = append(regular, tax)

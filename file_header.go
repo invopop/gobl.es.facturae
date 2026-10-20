@@ -55,6 +55,7 @@ func newFileHeader(invoice *bill.Invoice, tp *ThirdParty) *FileHeader {
 	//if invoice.Totals.Outlays != nil {
 	//	outstanding = outstanding.Subtract(*invoice.Totals.Outlays)
 	//}
+	rate := euroRate(invoice)
 	ii := InvoiceIssuerSeller
 	if tp != nil {
 		ii = InvoiceIssuerThirdParty
@@ -67,9 +68,9 @@ func newFileHeader(invoice *bill.Invoice, tp *ThirdParty) *FileHeader {
 		Batch: &Batch{
 			BatchIdentifier:        fmt.Sprintf("%s-%s", invoice.Supplier.TaxID.Code, invoice.Code),
 			InvoicesCount:          1,
-			TotalInvoicesAmount:    makeAmount(invoice.Totals.TotalWithTax),
-			TotalOutstandingAmount: makeAmount(outstanding),
-			TotalExecutableAmount:  makeAmount(invoice.Totals.Payable),
+			TotalInvoicesAmount:    makeAmount(invoice.Totals.TotalWithTax, rate),
+			TotalOutstandingAmount: makeAmount(outstanding, rate),
+			TotalExecutableAmount:  makeAmount(invoice.Totals.Payable, rate),
 			InvoiceCurrencyCode:    string(invoice.Currency),
 		},
 	}

@@ -7,6 +7,7 @@ import (
 
 	"github.com/invopop/gobl"
 	"github.com/invopop/gobl/bill"
+	"github.com/invopop/gobl/cal"
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/currency"
 	"github.com/invopop/gobl/org"
@@ -78,6 +79,10 @@ func goblInvoice(doc *Document) (*bill.Invoice, error) {
 	}
 	if operationDate != nil && *operationDate != *issueDate {
 		inv.ValueDate = operationDate
+	}
+
+	if inv.ExchangeRates, err = goblExchangeRates(d, inv.Currency); err != nil {
+		return nil, err
 	}
 
 	inv.SetTags(documentTags(h)...)
@@ -171,4 +176,25 @@ func goblNotes(xi *Invoice) []*org.Note {
 		notes = append(notes, &org.Note{Text: ad.InvoiceAdditionalInformation})
 	}
 	return notes
+}
+
+// goblExchangeRates reads the rate that converts the invoice currency into
+// euros, published on the given date.
+func goblExchangeRates(d *InvoiceIssueData, cur currency.Code) ([]*currency.ExchangeRate, error) {
+	if d.ExchangeRateDetails == nil || cur == currency.EUR {
+		return nil, nil
+	}
+	amount, err := parseAmount(d.ExchangeRateDetails.ExchangeRate)
+	if err != nil {
+		return nil, fmt.Errorf("exchange rate: %w", err)
+	}
+	rate := &currency.ExchangeRate{From: cur, To: currency.EUR, Amount: amount}
+	date, err := parseDate(d.ExchangeRateDetails.ExchangeRateDate)
+	if err != nil {
+		return nil, fmt.Errorf("exchange rate: %w", err)
+	}
+	if date != nil {
+		rate.At = cal.NewDateTime(date.Year, date.Month, date.Day, 0, 0, 0)
+	}
+	return []*currency.ExchangeRate{rate}, nil
 }

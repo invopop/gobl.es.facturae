@@ -2,6 +2,7 @@ package facturae
 
 import (
 	"github.com/invopop/gobl/bill"
+	"github.com/invopop/gobl/currency"
 	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/tax"
 )
@@ -44,14 +45,14 @@ const (
 	NonTaxableCode       SpecialTaxableEventCode = "02"
 )
 
-func newItems(lines []*bill.Line, taxes *tax.Total) *Items {
+func newItems(lines []*bill.Line, taxes *tax.Total, er *currency.ExchangeRate) *Items {
 	xmlLines := make([]*InvoiceLine, 0, len(lines))
 	for _, line := range lines {
 		if line.Total == nil {
 			// skip empty lines
 			continue
 		}
-		xmlLines = append(xmlLines, newInvoiceLine(line, taxes))
+		xmlLines = append(xmlLines, newInvoiceLine(line, taxes, er))
 	}
 	return &Items{
 		InvoiceLine: xmlLines,
@@ -64,7 +65,7 @@ func newItems(lines []*bill.Line, taxes *tax.Total) *Items {
 // totals instead of per line.
 // To try and get around this issue, we add an extra 2 points to exponents in
 // Amounts so that we get a bit more precision.
-func newInvoiceLine(line *bill.Line, taxes *tax.Total) *InvoiceLine {
+func newInvoiceLine(line *bill.Line, taxes *tax.Total, er *currency.ExchangeRate) *InvoiceLine {
 	xmlLine := &InvoiceLine{
 		ItemDescription:     line.Item.Name,
 		Quantity:            line.Quantity.String(),
@@ -74,13 +75,13 @@ func newInvoiceLine(line *bill.Line, taxes *tax.Total) *InvoiceLine {
 		Charges:             newLineCharges(line.Charges),
 		GrossAmount:         amount(*line.Total),
 	}
-	xmlLine.addTaxes(*line.Total, taxes, line.Taxes)
+	xmlLine.addTaxes(*line.Total, taxes, line.Taxes, er)
 
 	return xmlLine
 }
 
 // addTaxes reverse calculates what taxes should be assigned for each line.
-func (l *InvoiceLine) addTaxes(total num.Amount, taxes *tax.Total, rates tax.Set) {
+func (l *InvoiceLine) addTaxes(total num.Amount, taxes *tax.Total, rates tax.Set, er *currency.ExchangeRate) {
 	// make sure total is not going to give is rounding errors
 	if total.Exp() < 4 {
 		total = total.Rescale(total.Exp() + 2)
@@ -95,18 +96,18 @@ func (l *InvoiceLine) addTaxes(total num.Amount, taxes *tax.Total, rates tax.Set
 
 		tax := new(Tax)
 		tax.Code = categoryTaxCodeMap[ct.Code]
-		tax.Base = makeAmount(total)
+		tax.Base = makeAmount(total, er)
 		percent := rate.Percent
 		if percent == nil {
 			percent = num.NewPercentage(0, 0)
 		}
 		tax.Rate = percent.StringWithoutSymbol()
-		tax.Amount = makeAmount(percent.Of(total))
+		tax.Amount = makeAmount(percent.Of(total), er)
 		if rate.Surcharge != nil {
 			p := *rate.Surcharge
 			p = p.Rescale(4)
 			tax.Surcharge = p.StringWithoutSymbol()
-			v := makeAmount(rate.Surcharge.Of(total))
+			v := makeAmount(rate.Surcharge.Of(total), er)
 			tax.SurchargeAmount = &v
 		}
 		if ct.Retained {
