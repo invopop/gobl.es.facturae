@@ -44,7 +44,7 @@ func TestInvoiceValidation(t *testing.T) {
 		inv.Supplier.Addresses = nil
 		require.NoError(t, inv.Calculate())
 		err := rules.Validate(inv)
-		assert.ErrorContains(t, err, "[GOBL-ES-FACTURAE-BILL-INVOICE-08] ($.supplier.addresses) supplier address is required")
+		assert.ErrorContains(t, err, "[GOBL-ES-FACTURAE-BILL-INVOICE-08] ($.supplier.addresses) supplier address is required (FacturaE: SellerParty/LegalEntity|Individual/AddressInSpain|OverseasAddress)")
 	})
 
 	t.Run("missing supplier address country", func(t *testing.T) {
@@ -145,7 +145,7 @@ func TestInvoicePrecedingValidation(t *testing.T) {
 	}
 	require.NoError(t, inv.Calculate())
 	err = rules.Validate(inv)
-	assert.ErrorContains(t, err, "[GOBL-ES-FACTURAE-BILL-INVOICE-05] ($.preceding[0].issue_date) preceding document issue date is required; [GOBL-ES-FACTURAE-BILL-INVOICE-06] ($.preceding[0].ext) preceding document ext require 'es-facturae-correction' extension")
+	assert.ErrorContains(t, err, "[GOBL-ES-FACTURAE-BILL-INVOICE-05] ($.preceding[0].issue_date) preceding document issue date is required (FacturaE: Corrective/TaxPeriod); [GOBL-ES-FACTURAE-BILL-INVOICE-06] ($.preceding[0].ext) preceding document ext require 'es-facturae-correction' extension (FacturaE: Corrective/ReasonCode)")
 
 	inv.Preceding[0].Ext = tax.ExtensionsOf(cbc.CodeMap{
 		facturae.ExtKeyCorrection: "01",

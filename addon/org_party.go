@@ -1,6 +1,8 @@
 package facturae
 
 import (
+	"fmt"
+
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/org"
 	"github.com/invopop/gobl/rules"
@@ -9,14 +11,15 @@ import (
 
 // partyRules ensures a party has what FacturaE requires to describe it: an
 // address with a country, and a person when it is an individual. Each party
-// is given its own codes, starting from the first one provided.
-func partyRules(name string, codes ...rules.Code) []rules.Def {
+// is given its own codes, starting from the first one provided, and messages
+// refer to the FacturaE element of the party.
+func partyRules(name, element string, codes ...rules.Code) []rules.Def {
 	return []rules.Def{
 		rules.Field("addresses",
-			rules.Assert(codes[0], name+" address is required", is.Present),
+			rules.Assert(codes[0], fmt.Sprintf("%s address is required (FacturaE: %s/LegalEntity|Individual/AddressInSpain|OverseasAddress)", name, element), is.Present),
 		),
-		rules.Assert(codes[1], name+" address country is required", is.Func("address country", partyHasAddressCountry)),
-		rules.Assert(codes[2], name+" person is required for individuals", is.Func("individual person", partyHasIndividualPerson)),
+		rules.Assert(codes[1], fmt.Sprintf("%s address country is required (FacturaE: %s/LegalEntity|Individual/OverseasAddress/CountryCode)", name, element), is.Func("address country", partyHasAddressCountry)),
+		rules.Assert(codes[2], fmt.Sprintf("%s person is required for individuals (FacturaE: %s/Individual)", name, element), is.Func("individual person", partyHasIndividualPerson)),
 	}
 }
 

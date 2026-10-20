@@ -11,7 +11,7 @@ import (
 func payDueDateRules() *rules.Set {
 	return rules.For(new(pay.DueDate),
 		rules.Field("amount",
-			rules.Assert("01", "amount is required", is.Present, num.NotZero),
+			rules.Assert("01", "amount is required (FacturaE: PaymentDetails/Installment/InstallmentAmount)", is.Present, num.NotZero),
 		),
 	)
 }
