@@ -163,6 +163,8 @@ func TestRoundTrip(t *testing.T) {
 
 			inv := env.Extract().(*bill.Invoice)
 			assert.Equal(t, srcInv.Type, inv.Type)
+			assert.Equal(t, srcInv.Currency, inv.Currency)
+			assert.Equal(t, srcInv.ExchangeRates, inv.ExchangeRates)
 			assert.Len(t, inv.Lines, len(srcInv.Lines))
 			assert.Equal(t, srcInv.Totals.Payable.String(), inv.Totals.Payable.String())
 		})
