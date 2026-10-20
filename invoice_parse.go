@@ -59,8 +59,13 @@ func goblInvoice(doc *Document) (*bill.Invoice, error) {
 		Series:   cbc.Code(h.InvoiceSeriesCode),
 		Code:     cbc.Code(h.InvoiceNumber),
 		Currency: currency.Code(d.InvoiceCurrencyCode),
-		Supplier: goblParty(doc.Parties.Seller),
-		Customer: goblParty(doc.Parties.Buyer),
+	}
+	var err error
+	if inv.Supplier, err = goblParty(doc.Parties.Seller); err != nil {
+		return nil, fmt.Errorf("seller: %w", err)
+	}
+	if inv.Customer, err = goblParty(doc.Parties.Buyer); err != nil {
+		return nil, fmt.Errorf("buyer: %w", err)
 	}
 	goblAdministrativeCentres(inv, doc.Parties.Buyer)
 

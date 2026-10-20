@@ -7,6 +7,7 @@ import (
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/l10n"
 	"github.com/invopop/gobl/num"
+	"github.com/invopop/gobl/org"
 	"github.com/invopop/gobl/pay"
 	"github.com/invopop/gobl/regimes/es"
 	"github.com/invopop/gobl/tax"
@@ -41,16 +42,22 @@ func TestParseHelpers(t *testing.T) {
 	assert.Error(t, err)
 
 	assert.Equal(t, l10n.ISOCountryCode("ES"), countryFromAlpha3("ESP"))
+	assert.Equal(t, l10n.ISOCountryCode("GR"), countryFromAlpha3("GRC"))
+	assert.Equal(t, l10n.ISOCountryCode("PT"), countryFromAlpha3(" prt "))
 	assert.Empty(t, countryFromAlpha3("XXX"))
 }
 
 func TestGoblParties(t *testing.T) {
 	t.Run("nil", func(t *testing.T) {
-		assert.Nil(t, goblParty(nil))
-		assert.Nil(t, goblTaxID(nil, nil))
+		p, err := goblParty(nil)
+		assert.NoError(t, err)
+		assert.Nil(t, p)
+		id, err := goblTaxID(nil, nil)
+		assert.NoError(t, err)
+		assert.Nil(t, id)
 	})
 	t.Run("legal entity", func(t *testing.T) {
-		p := goblParty(&Party{
+		p, err := goblParty(&Party{
 			TaxID: &TaxID{ResidenceTypeCode: "E", TaxIdentificationNumber: "123"},
 			LegalEntity: &LegalEntity{
 				CorporateName: "Acme Inc.",
@@ -66,6 +73,7 @@ func TestGoblParties(t *testing.T) {
 				},
 			},
 		})
+		require.NoError(t, err)
 		assert.Equal(t, "Acme Inc.", p.Name)
 		assert.Equal(t, l10n.TaxCountryCode("US"), p.TaxID.Country)
 		assert.Equal(t, "Springfield", p.Addresses[0].Locality)
@@ -75,17 +83,81 @@ func TestGoblParties(t *testing.T) {
 		assert.Equal(t, "+1555", p.Telephones[0].Number)
 	})
 	t.Run("individual", func(t *testing.T) {
-		p := goblParty(&Party{
-			TaxID: &TaxID{ResidenceTypeCode: "U", TaxIdentificationNumber: "123"},
+		p, err := goblParty(&Party{
+			TaxID: &TaxID{ResidenceTypeCode: "U", TaxIdentificationNumber: "FR123"},
 			Individual: &Individual{
 				Name:           "Jean",
 				FirstSurname:   "Dubois",
 				ContactDetails: &ContactDetails{ContactPersons: "Jean Dubois"},
 			},
 		})
+		require.NoError(t, err)
 		assert.Equal(t, "Jean Dubois", p.Name)
 		assert.Len(t, p.People, 1)
-		assert.Empty(t, p.TaxID.Country, "no address to take the country from")
+		assert.Equal(t, l10n.TaxCountryCode("FR"), p.TaxID.Country, "country from prefix without an address")
+	})
+	t.Run("no tax country", func(t *testing.T) {
+		tests := map[string]*Party{
+			"non-eu without address": {
+				TaxID:      &TaxID{ResidenceTypeCode: "E", TaxIdentificationNumber: "123"},
+				Individual: &Individual{Name: "John"},
+			},
+			"eu without prefix or address": {
+				TaxID:      &TaxID{ResidenceTypeCode: "U", TaxIdentificationNumber: "123"},
+				Individual: &Individual{Name: "Jean"},
+			},
+			"unknown address country": {
+				TaxID: &TaxID{ResidenceTypeCode: "E", TaxIdentificationNumber: "123"},
+				LegalEntity: &LegalEntity{
+					CorporateName:   "Acme Inc.",
+					OverseasAddress: &OverseasAddress{Address: "Main Street", CountryCode: "XXX"},
+				},
+			},
+		}
+		for name, party := range tests {
+			t.Run(name, func(t *testing.T) {
+				_, err := goblParty(party)
+				assert.ErrorContains(t, err, "tax ID 123: country not found in EU prefix or address")
+			})
+		}
+	})
+	t.Run("greek tax country", func(t *testing.T) {
+		p, err := goblParty(&Party{
+			TaxID: &TaxID{ResidenceTypeCode: "U", TaxIdentificationNumber: "123456789"},
+			LegalEntity: &LegalEntity{
+				CorporateName:   "Acme AE",
+				OverseasAddress: &OverseasAddress{Address: "Odos Ermou, 1", PostCodeAndTown: "10563 Athens", CountryCode: "GRC"},
+			},
+		})
+		require.NoError(t, err)
+		assert.Equal(t, l10n.ISOCountryCode("GR"), p.Addresses[0].Country)
+		assert.Equal(t, l10n.TaxCountryCode("EL"), p.TaxID.Country)
+	})
+	t.Run("eu tax id prefix", func(t *testing.T) {
+		tests := map[string]struct {
+			rtc, num, country string
+			want              *tax.Identity
+		}{
+			"prefixed":         {"U", "FR12345678901", "ITA", &tax.Identity{Country: "FR", Code: "12345678901"}},
+			"greek prefix":     {"U", "EL123456789", "", &tax.Identity{Country: "EL", Code: "123456789"}},
+			"lower case":       {"U", "pt123456789", "", &tax.Identity{Country: "PT", Code: "123456789"}},
+			"no prefix":        {"U", "12345678901", "FRA", &tax.Identity{Country: "FR", Code: "12345678901"}},
+			"non-eu prefix":    {"U", "US12345", "FRA", &tax.Identity{Country: "FR", Code: "US12345"}},
+			"non-eu resident":  {"E", "FR12345678901", "USA", &tax.Identity{Country: "US", Code: "FR12345678901"}},
+			"spanish resident": {"R", "B23103039", "", &tax.Identity{Country: "ES", Code: "B23103039"}},
+			"spanish prefixed": {"R", "ESB23103039", "", &tax.Identity{Country: "ES", Code: "B23103039"}},
+		}
+		for name, tt := range tests {
+			t.Run(name, func(t *testing.T) {
+				var addrs []*org.Address
+				if tt.country != "" {
+					addrs = []*org.Address{{Country: countryFromAlpha3(tt.country)}}
+				}
+				id, err := goblTaxID(&TaxID{ResidenceTypeCode: tt.rtc, TaxIdentificationNumber: tt.num}, addrs)
+				require.NoError(t, err)
+				assert.Equal(t, tt.want, id)
+			})
+		}
 	})
 	t.Run("address lines", func(t *testing.T) {
 		a := goblAddressLine("Calle Mayor, 1, 2, B")

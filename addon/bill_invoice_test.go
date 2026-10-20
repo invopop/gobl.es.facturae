@@ -39,6 +39,63 @@ func TestInvoiceValidation(t *testing.T) {
 		assert.NoError(t, err, "if there is no country, customer tax ID code is not required")
 	})
 
+	t.Run("missing supplier address", func(t *testing.T) {
+		inv := testInvoiceStandard(t)
+		inv.Supplier.Addresses = nil
+		require.NoError(t, inv.Calculate())
+		err := rules.Validate(inv)
+		assert.ErrorContains(t, err, "[GOBL-ES-FACTURAE-BILL-INVOICE-08] ($.supplier.addresses) supplier address is required")
+	})
+
+	t.Run("missing supplier address country", func(t *testing.T) {
+		inv := testInvoiceStandard(t)
+		inv.Supplier.Addresses[0].Country = ""
+		require.NoError(t, inv.Calculate())
+		err := rules.Validate(inv)
+		assert.ErrorContains(t, err, "[GOBL-ES-FACTURAE-BILL-INVOICE-09] ($.supplier) supplier address country is required")
+	})
+
+	t.Run("missing supplier person for individual", func(t *testing.T) {
+		inv := testInvoiceStandard(t)
+		inv.Supplier.TaxID.Code = "54387763P"
+		require.NoError(t, inv.Calculate())
+		err := rules.Validate(inv)
+		assert.ErrorContains(t, err, "[GOBL-ES-FACTURAE-BILL-INVOICE-10] ($.supplier) supplier person is required for individuals")
+	})
+
+	t.Run("missing customer address", func(t *testing.T) {
+		inv := testInvoiceStandard(t)
+		inv.Customer.Addresses = nil
+		require.NoError(t, inv.Calculate())
+		err := rules.Validate(inv)
+		assert.ErrorContains(t, err, "[GOBL-ES-FACTURAE-BILL-INVOICE-11] ($.customer.addresses) customer address is required")
+	})
+
+	t.Run("missing customer address country", func(t *testing.T) {
+		inv := testInvoiceStandard(t)
+		inv.Customer.Addresses[0].Country = ""
+		require.NoError(t, inv.Calculate())
+		err := rules.Validate(inv)
+		assert.ErrorContains(t, err, "[GOBL-ES-FACTURAE-BILL-INVOICE-12] ($.customer) customer address country is required")
+	})
+
+	t.Run("missing customer person for individual", func(t *testing.T) {
+		inv := testInvoiceStandard(t)
+		inv.Customer.People = nil
+		require.NoError(t, inv.Calculate())
+		err := rules.Validate(inv)
+		assert.ErrorContains(t, err, "[GOBL-ES-FACTURAE-BILL-INVOICE-13] ($.customer) customer person is required for individuals")
+	})
+
+	t.Run("customer without tax ID needs no address", func(t *testing.T) {
+		inv := testInvoiceStandard(t)
+		inv.Customer.TaxID = nil
+		inv.Customer.Addresses = nil
+		inv.Customer.People = nil
+		require.NoError(t, inv.Calculate())
+		assert.NoError(t, rules.Validate(inv))
+	})
+
 	t.Run("missing ext key doc type", func(t *testing.T) {
 		inv := testInvoiceStandard(t)
 		require.NoError(t, inv.Calculate())
@@ -117,13 +174,20 @@ func testInvoiceStandard(t *testing.T) *bill.Invoice {
 				Country: "ES",
 				Code:    "B98602642",
 			},
+			Addresses: []*org.Address{
+				{Street: "Calle Mayor", Code: "28013", Locality: "Madrid", Country: "ES"},
+			},
 		},
 		Customer: &org.Party{
 			TaxID: &tax.Identity{
 				Country: "ES",
 				Code:    "54387763P",
 			},
-			Name: "Test Customer",
+			Name:   "Test Customer",
+			People: []*org.Person{{Name: &org.Name{Given: "Test", Surname: "Customer"}}},
+			Addresses: []*org.Address{
+				{Street: "Calle Mayor", Code: "28013", Locality: "Madrid", Country: "ES"},
+			},
 		},
 		IssueDate: cal.MakeDate(2022, 6, 13),
 		Lines: []*bill.Line{

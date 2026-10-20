@@ -140,7 +140,8 @@ func Export(env *gobl.Envelope, opts ...Option) (*Document, error) {
 		},
 	}
 
-	d.Parties.Seller.TaxID = newTaxID(invoice.Supplier.TaxID.Code, invoice.Supplier.TaxID.Country)
+	ic := intraCommunity(invoice)
+	d.Parties.Seller.TaxID = newTaxID(invoice.Supplier.TaxID.Code, invoice.Supplier.TaxID.Country, ic)
 	if d.Parties.Seller.TaxID.PersonTypeCode == "F" {
 		d.Parties.Seller.Individual = newIndividual(invoice.Supplier)
 	} else {
@@ -151,7 +152,7 @@ func Export(env *gobl.Envelope, opts ...Option) (*Document, error) {
 		// Simplified invoices are not supported by FacturaE, but this is where
 		// they'd be handled if the situation changes.
 		b := d.Parties.Buyer
-		b.TaxID = newTaxID(invoice.Customer.TaxID.Code, invoice.Customer.TaxID.Country)
+		b.TaxID = newTaxID(invoice.Customer.TaxID.Code, invoice.Customer.TaxID.Country, ic)
 		b.AdministrativeCentres = newAdministrativeCentres(invoice)
 		if b.TaxID.PersonTypeCode == "F" {
 			b.Individual = newIndividual(invoice.Customer)

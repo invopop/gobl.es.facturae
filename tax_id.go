@@ -3,6 +3,8 @@ package facturae
 import (
 	"strings"
 
+	addon "github.com/invopop/gobl.es.facturae/addon"
+	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/l10n"
 )
@@ -14,40 +16,36 @@ type TaxID struct {
 	TaxIdentificationNumber string `xml:"TaxIdentificationNumber"`
 }
 
-// newTaxID builds the tax identification information of a party
-func newTaxID(taxNumber cbc.Code, countryCode l10n.TaxCountryCode) *TaxID {
+// newTaxID builds the tax identification information of a party. Numbers are
+// preceded by the country code for parties resident elsewhere in the EU, and
+// for Spanish parties in intra-community operations.
+func newTaxID(taxNumber cbc.Code, countryCode l10n.TaxCountryCode, intraCommunity bool) *TaxID {
+	rtc := residenceTypeCode(countryCode)
+	num := strings.ReplaceAll(taxNumber.String(), "-", "")
+	if (rtc == "U" || intraCommunity) && !strings.HasPrefix(num, countryCode.String()) {
+		num = countryCode.String() + num
+	}
 	return &TaxID{
 		PersonTypeCode:          personTypeCode(taxNumber),
-		ResidenceTypeCode:       residenceTypeCode(countryCode),
-		TaxIdentificationNumber: strings.ReplaceAll(taxNumber.String(), "-", ""),
+		ResidenceTypeCode:       rtc,
+		TaxIdentificationNumber: num,
 	}
 }
 
+// intraCommunity is true when the supplier and customer are tax resident in
+// different EU member states.
+func intraCommunity(inv *bill.Invoice) bool {
+	if inv.Supplier == nil || inv.Supplier.TaxID == nil || inv.Customer == nil || inv.Customer.TaxID == nil {
+		return false
+	}
+	s, c := inv.Supplier.TaxID.Country, inv.Customer.TaxID.Country
+	return s != c && residesInEU(s) && residesInEU(c)
+}
+
 func personTypeCode(taxNumber cbc.Code) string {
-	// Depending on the first character of the number we can know
-	// whether is a legal entity or a person
-	// https://asepyme.com/diferencias-entre-cif-nif-dni
-	switch rune(taxNumber[0]) {
-	case
-		'0',
-		'1',
-		'2',
-		'3',
-		'4',
-		'5',
-		'6',
-		'7',
-		'8',
-		'9',
-		'K',
-		'L',
-		'M',
-		'X',
-		'Y',
-		'Z':
+	if addon.IndividualTaxCode(taxNumber) {
 		return "F"
 	}
-
 	return "J"
 }
 
@@ -76,6 +74,7 @@ func residesInEU(countryCode l10n.TaxCountryCode) bool {
 		l10n.EE, // Estonia
 		l10n.IE, // Ireland
 		l10n.GR, // Greece
+		l10n.EL, // Greece (tax code)
 		l10n.ES, // Spain
 		l10n.FR, // France
 		l10n.HR, // Croatia

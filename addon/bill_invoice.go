@@ -25,7 +25,13 @@ var invoiceCorrectionDefinitions = tax.CorrectionSet{
 func billInvoiceRules() *rules.Set {
 	return rules.For(new(bill.Invoice),
 		rules.Assert("07", "invoice must be in EUR or provide exchange rate for conversion", currency.CanConvertTo(currency.EUR)),
+		rules.Field("supplier", partyRules("supplier", "08", "09", "10")...),
 		rules.Field("customer",
+			// FacturaE only includes customers with a tax ID
+			rules.When(
+				is.Func("tax ID present", partyHasTaxID),
+				partyRules("customer", "11", "12", "13")...,
+			),
 			rules.Field("tax_id",
 				rules.When(
 					tax.IdentityIn(es.CountryCode),

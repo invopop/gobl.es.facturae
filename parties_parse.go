@@ -1,6 +1,7 @@
 package facturae
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/invopop/gobl/bill"
@@ -12,9 +13,9 @@ import (
 
 // goblParty converts a FacturaE party, a company or a person, into a GOBL
 // party.
-func goblParty(p *Party) *org.Party {
+func goblParty(p *Party) (*org.Party, error) {
 	if p == nil {
-		return nil
+		return nil, nil
 	}
 	out := new(org.Party)
 	switch {
@@ -35,24 +36,49 @@ func goblParty(p *Party) *org.Party {
 		out.Addresses = goblAddresses(in.AddressInSpain, in.OverseasAddress)
 		goblContactDetails(out, in.ContactDetails, false)
 	}
-	out.TaxID = goblTaxID(p.TaxID, out.Addresses)
-	return out
+	var err error
+	if out.TaxID, err = goblTaxID(p.TaxID, out.Addresses); err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 // goblTaxID provides the tax identity of a party. FacturaE only says whether
-// a party resides in Spain, so others take their country from their address.
-func goblTaxID(t *TaxID, addrs []*org.Address) *tax.Identity {
+// a party resides in Spain, so EU residents take their country from the prefix
+// of their number, and others from their address, which the schema requires.
+// Spanish numbers may also carry the ES prefix in intra-community operations,
+// which no NIF starts with.
+func goblTaxID(t *TaxID, addrs []*org.Address) (*tax.Identity, error) {
 	if t == nil {
-		return nil
+		return nil, nil
 	}
-	id := &tax.Identity{Code: cbc.Code(t.TaxIdentificationNumber)}
+	num := strings.TrimSpace(t.TaxIdentificationNumber)
+	id := &tax.Identity{Code: cbc.Code(num)}
 	switch {
 	case t.ResidenceTypeCode == "R":
 		id.Country = l10n.ES.Tax()
+		if len(num) > 2 && strings.EqualFold(num[:2], "ES") {
+			id.Code = cbc.Code(num[2:])
+		}
+	case t.ResidenceTypeCode == "U" && len(num) > 2 && residesInEU(l10n.TaxCountryCode(strings.ToUpper(num[:2]))):
+		id.Country = taxCountry(l10n.ISOCountryCode(strings.ToUpper(num[:2])))
+		id.Code = cbc.Code(num[2:])
 	case len(addrs) > 0:
-		id.Country = l10n.TaxCountryCode(addrs[0].Country)
+		id.Country = taxCountry(addrs[0].Country)
 	}
-	return id
+	if id.Country.Empty() {
+		return nil, fmt.Errorf("tax ID %s: country not found in EU prefix or address", num)
+	}
+	return id, nil
+}
+
+// taxCountry provides the tax country code for an ISO country, which differs
+// for some, such as Greece, which uses EL for tax instead of GR.
+func taxCountry(c l10n.ISOCountryCode) l10n.TaxCountryCode {
+	if d := l10n.Countries().Code(c.Code()); d != nil && !d.Tax && !d.AltCode.Empty() {
+		return d.AltCode.Tax()
+	}
+	return c.Code().Tax()
 }
 
 func goblContactDetails(out *org.Party, cd *ContactDetails, people bool) {

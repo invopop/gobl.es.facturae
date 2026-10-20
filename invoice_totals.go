@@ -186,7 +186,7 @@ func (it *InvoiceTotals) setOutlays(outlays []*bill.Outlay) {
 		if o.Supplier != nil {
 			tid := o.Supplier.TaxID
 			if tid != nil {
-				no.ReimbursableExpensesSellerParty = newTaxID(tid.Code, tid.Country)
+				no.ReimbursableExpensesSellerParty = newTaxID(tid.Code, tid.Country, false)
 			}
 		}
 		os = append(os, no)

@@ -62,6 +62,7 @@ func parseDate(s string) (*cal.Date, error) {
 // countryFromAlpha3 provides the ISO country code for a FacturaE country
 // code, which uses ISO 3166-1 alpha-3.
 func countryFromAlpha3(code string) l10n.ISOCountryCode {
+	code = strings.ToUpper(strings.TrimSpace(code))
 	for _, cd := range l10n.Countries() {
 		if cd.Alpha3 == code {
 			return l10n.ISOCountryCode(cd.Code)
