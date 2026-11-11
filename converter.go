@@ -66,7 +66,7 @@ func (converter) Detect(in *convert.Input) cbc.Key {
 	return cbc.KeyEmpty
 }
 
-func (converter) Import(_ cbc.Key, data []byte) (*convert.ImportResult, error) {
+func (converter) Import(_ cbc.Key, data []byte, _ *convert.ImportOptions) (*convert.ImportResult, error) {
 	doc, err := Decode(data)
 	if err != nil {
 		return nil, err
