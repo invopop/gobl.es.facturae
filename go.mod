@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	github.com/beevik/etree v1.6.0
-	github.com/invopop/gobl v0.511.2-0.20261028160436-70b61edef3e2
+	github.com/invopop/gobl v0.512.0
 	github.com/invopop/xmlctx v0.13.0
 	github.com/invopop/xmldsig v0.14.0
 	github.com/lestrrat-go/libxml2 v0.0.0-20240905100032-c934e3fcb9d3
@@ -20,7 +20,7 @@ require (
 	github.com/buger/jsonparser v1.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/expr-lang/expr v1.17.8 // indirect
-	github.com/go-jose/go-jose/v4 v4.1.4 // indirect
+	github.com/go-jose/go-jose/v4 v4.1.6 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/invopop/jsonschema v0.14.0 // indirect
 	github.com/invopop/yaml v0.3.1 // indirect
