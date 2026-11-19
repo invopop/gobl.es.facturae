@@ -124,11 +124,7 @@ go test ./...
 go test ./... --update
 ```
 
-The `xsdvalidate` build tag validates exported documents against the FacturaE schema in `test/schema` when updating them. It needs the libxml2 development libraries (`libxml2-dev` on Debian and Ubuntu, `libxml2` on Homebrew):
-
-```bash
-go test -tags xsdvalidate ./... --update
-```
+Updating validates each exported document against the FacturaE schema in `test/schema` before writing it.
 
 `TestSignature` checks each signed export as a receiver would, from the encoded bytes alone: every reference digest, the XAdES signing certificate and the signature value. It also checks that changed documents are refused, and that `Decode` reads the signature back. The documents in `convert/out` are indented for review, which breaks their signatures. Use `Encode` for documents that will be sent.
 

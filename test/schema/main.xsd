@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Wrapper schema that imports the FacturaE schema after a local copy of the XML Signature schema it imports by URL. -->
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+	<import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
+	<import namespace="http://www.facturae.gob.es/formato/Versiones/Facturaev3_2_2.xml" schemaLocation="facturaev3_2_2.xsd"/>
+</schema>
