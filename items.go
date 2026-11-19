@@ -14,6 +14,8 @@ type Items struct {
 
 // InvoiceLine contains info about a specific line
 type InvoiceLine struct {
+	ReceiverContractReference     string               `xml:"ReceiverContractReference,omitempty"`
+	ReceiverContractDate          string               `xml:"ReceiverContractDate,omitempty"`
 	ItemDescription               string               `xml:"ItemDescription"`
 	Quantity                      string               `xml:"Quantity"`
 	UnitOfMeasure                 string               `xml:"UnitOfMeasure,omitempty"`
@@ -45,14 +47,21 @@ const (
 	NonTaxableCode       SpecialTaxableEventCode = "02"
 )
 
-func newItems(lines []*bill.Line, taxes *tax.Total, er *currency.ExchangeRate) *Items {
+func newItems(lines []*bill.Line, ordering *bill.Ordering, taxes *tax.Total, er *currency.ExchangeRate) *Items {
 	xmlLines := make([]*InvoiceLine, 0, len(lines))
 	for _, line := range lines {
 		if line.Total == nil {
 			// skip empty lines
 			continue
 		}
-		xmlLines = append(xmlLines, newInvoiceLine(line, taxes, er))
+		xl := newInvoiceLine(line, taxes, er)
+		if c := receiverContract(ordering, line.Index); c != nil {
+			xl.ReceiverContractReference = c.Code.String()
+			if c.IssueDate != nil {
+				xl.ReceiverContractDate = c.IssueDate.String()
+			}
+		}
+		xmlLines = append(xmlLines, xl)
 	}
 	return &Items{
 		InvoiceLine: xmlLines,

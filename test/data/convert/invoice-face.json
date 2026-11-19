@@ -127,7 +127,13 @@
 						"country": "ES"
 					}
 				]
-			}
+			},
+			"contracts": [
+				{
+					"issue_date": "2021-09-01",
+					"code": "CTR-2021-0042"
+				}
+			]
 		},
 		"lines": [
 			{

@@ -52,6 +52,15 @@ func billInvoiceRules() *rules.Set {
 				),
 			),
 		),
+		rules.Field("ordering",
+			rules.Field("contracts",
+				rules.Each(
+					rules.Field("code",
+						rules.Assert("14", "contract code must be 20 characters or fewer (FacturaE: ReceiverContractReference)", is.RuneLength(0, 20)),
+					),
+				),
+			),
+		),
 		rules.When(
 			bill.InvoiceTypeIn(es.InvoiceCorrectionTypes...),
 			rules.Field("preceding",

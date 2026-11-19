@@ -167,6 +167,10 @@ func TestRoundTrip(t *testing.T) {
 			assert.Equal(t, srcInv.ExchangeRates, inv.ExchangeRates)
 			assert.Len(t, inv.Lines, len(srcInv.Lines))
 			assert.Equal(t, srcInv.Totals.Payable.String(), inv.Totals.Payable.String())
+			if o := srcInv.Ordering; o != nil && len(o.Contracts) > 0 {
+				require.NotNil(t, inv.Ordering)
+				assert.Equal(t, o.Contracts, inv.Ordering.Contracts)
+			}
 		})
 	}
 }

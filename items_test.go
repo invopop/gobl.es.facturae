@@ -3,7 +3,10 @@ package facturae_test
 import (
 	"testing"
 
+	facturae "github.com/invopop/gobl.es.facturae"
 	"github.com/invopop/gobl.es.facturae/test"
+	"github.com/invopop/gobl/bill"
+	"github.com/invopop/gobl/org"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -85,4 +88,34 @@ func TestInvoiceLineTaxNotIncluded(t *testing.T) {
 	assert.Equal(t, "3800.00", tax2.Base.TotalAmount)
 	assert.Equal(t, "15.0", tax2.Rate)
 	assert.Equal(t, "570.00", tax2.Amount.TotalAmount)
+}
+
+func TestInvoiceLineReceiverContract(t *testing.T) {
+	t.Run("contract for the whole invoice", func(t *testing.T) {
+		doc, err := test.NewDocumentFrom("invoice-face.json")
+		require.NoError(t, err)
+
+		xmlInvoice := doc.Invoices.List[0]
+		assert.Equal(t, "CTR-2021-0042", xmlInvoice.InvoiceIssueData.ReceiverContractReference)
+		line := xmlInvoice.Items.InvoiceLine[0]
+		assert.Equal(t, "CTR-2021-0042", line.ReceiverContractReference)
+		assert.Equal(t, "2021-09-01", line.ReceiverContractDate)
+	})
+
+	t.Run("contract for some lines", func(t *testing.T) {
+		env, err := test.LoadTestEnvelope("invoice-vat-irpf-inc.json")
+		require.NoError(t, err)
+		inv := env.Extract().(*bill.Invoice)
+		inv.Ordering = &bill.Ordering{
+			Contracts: []*org.DocumentRef{{Code: "CTR-2", Lines: []int{2}}},
+		}
+		doc, err := facturae.Export(env)
+		require.NoError(t, err)
+
+		xmlInvoice := doc.Invoices.List[0]
+		assert.Empty(t, xmlInvoice.InvoiceIssueData.ReceiverContractReference)
+		assert.Empty(t, xmlInvoice.Items.InvoiceLine[0].ReceiverContractReference)
+		assert.Equal(t, "CTR-2", xmlInvoice.Items.InvoiceLine[1].ReceiverContractReference)
+		assert.Empty(t, xmlInvoice.Items.InvoiceLine[1].ReceiverContractDate)
+	})
 }
