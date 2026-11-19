@@ -128,6 +128,25 @@ func TestInvoiceValidation(t *testing.T) {
 		err := rules.Validate(inv)
 		assert.NoError(t, err)
 	})
+
+	t.Run("contract code within 20 characters", func(t *testing.T) {
+		inv := testInvoiceStandard(t)
+		inv.Ordering = &bill.Ordering{
+			Contracts: []*org.DocumentRef{{Code: "CTR-2021-0042-LOT-01"}},
+		}
+		require.NoError(t, inv.Calculate())
+		assert.NoError(t, rules.Validate(inv))
+	})
+
+	t.Run("contract code over 20 characters", func(t *testing.T) {
+		inv := testInvoiceStandard(t)
+		inv.Ordering = &bill.Ordering{
+			Contracts: []*org.DocumentRef{{Code: "CTR-2021-0042-LOT-0001"}},
+		}
+		require.NoError(t, inv.Calculate())
+		err := rules.Validate(inv)
+		assert.ErrorContains(t, err, "[GOBL-ES-FACTURAE-BILL-INVOICE-14] ($.ordering.contracts[0].code) contract code must be 20 characters or fewer (FacturaE: ReceiverContractReference)")
+	})
 }
 
 func TestInvoicePrecedingValidation(t *testing.T) {

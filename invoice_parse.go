@@ -3,6 +3,7 @@ package facturae
 import (
 	"errors"
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/invopop/gobl"
@@ -95,6 +96,16 @@ func goblInvoice(doc *Document) (*bill.Invoice, error) {
 	if inv.Lines, err = goblLines(xi.Items); err != nil {
 		return nil, err
 	}
+	contracts, err := goblContracts(d, xi.Items)
+	if err != nil {
+		return nil, err
+	}
+	if len(contracts) > 0 {
+		if inv.Ordering == nil {
+			inv.Ordering = new(bill.Ordering)
+		}
+		inv.Ordering.Contracts = contracts
+	}
 	goblRateKeys(inv)
 	if t := xi.InvoiceTotals; t != nil {
 		if inv.Discounts, err = goblDiscounts(t.GeneralDiscounts); err != nil {
@@ -115,6 +126,43 @@ func goblInvoice(doc *Document) (*bill.Invoice, error) {
 		}
 	}
 	return inv, nil
+}
+
+// goblContracts reads the receiver's contract references; a contract found
+// only on some lines lists them, while the header's covers the whole invoice.
+func goblContracts(d *InvoiceIssueData, items *Items) ([]*org.DocumentRef, error) {
+	header := cbc.Code(d.ReceiverContractReference)
+	var contracts []*org.DocumentRef
+	if header != cbc.CodeEmpty {
+		contracts = append(contracts, &org.DocumentRef{Code: header})
+	}
+	if items == nil {
+		return contracts, nil
+	}
+	for i, il := range items.InvoiceLine {
+		code := cbc.Code(il.ReceiverContractReference)
+		if code == cbc.CodeEmpty {
+			continue
+		}
+		var c *org.DocumentRef
+		if n := slices.IndexFunc(contracts, func(c *org.DocumentRef) bool { return c.Code == code }); n >= 0 {
+			c = contracts[n]
+		} else {
+			c = &org.DocumentRef{Code: code}
+			contracts = append(contracts, c)
+		}
+		if code != header {
+			c.Lines = append(c.Lines, i+1)
+		}
+		if c.IssueDate == nil {
+			date, err := parseDate(il.ReceiverContractDate)
+			if err != nil {
+				return nil, err
+			}
+			c.IssueDate = date
+		}
+	}
+	return contracts, nil
 }
 
 // goblCorrection sets the type and preceding document of a corrective

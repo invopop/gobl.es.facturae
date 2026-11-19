@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/invopop/gobl/bill"
+	"github.com/invopop/gobl/cal"
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/l10n"
 	"github.com/invopop/gobl/num"
@@ -304,6 +305,32 @@ func TestGoblCorrective(t *testing.T) {
 		assert.Equal(t, bill.InvoiceTypeDebitNote, correctionType(&Corrective{CorrectionMethod: "02"}, false))
 		assert.Equal(t, bill.InvoiceTypeCorrective, correctionType(nil, false))
 	})
+}
+
+func TestGoblContracts(t *testing.T) {
+	d := &InvoiceIssueData{ReceiverContractReference: "CTR-1"}
+	items := &Items{InvoiceLine: []*InvoiceLine{
+		{ReceiverContractReference: "CTR-1", ReceiverContractDate: "2021-09-01"},
+		{ReceiverContractReference: "CTR-2"},
+		{},
+		{ReceiverContractReference: "CTR-2"},
+	}}
+	contracts, err := goblContracts(d, items)
+	require.NoError(t, err)
+	date := cal.MakeDate(2021, 9, 1)
+	assert.Equal(t, []*org.DocumentRef{
+		{Code: "CTR-1", IssueDate: &date},
+		{Code: "CTR-2", Lines: []int{2, 4}},
+	}, contracts)
+
+	contracts, err = goblContracts(&InvoiceIssueData{}, nil)
+	require.NoError(t, err)
+	assert.Empty(t, contracts)
+
+	_, err = goblContracts(&InvoiceIssueData{}, &Items{InvoiceLine: []*InvoiceLine{
+		{ReceiverContractReference: "CTR-1", ReceiverContractDate: badNumber},
+	}})
+	assert.Error(t, err)
 }
 
 func TestDocumentTags(t *testing.T) {

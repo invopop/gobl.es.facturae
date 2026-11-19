@@ -1,6 +1,8 @@
 package facturae
 
 import (
+	"slices"
+
 	addon "github.com/invopop/gobl.es.facturae/addon"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cal"
@@ -58,7 +60,7 @@ type InvoiceIssueData struct {
 	InvoiceDescription           string               `xml:"InvoiceDescription,omitempty"`           // TODO
 	ReceiverTransactionReference string               `xml:"ReceiverTransactionReference,omitempty"` // TODO
 	FileReference                string               `xml:"FileReference,omitempty"`                // TODO
-	ReceiverContractReference    string               `xml:"ReceiverContractReference,omitempty"`    // TODO
+	ReceiverContractReference    string               `xml:"ReceiverContractReference,omitempty"`
 }
 
 // LegalLiterals contains an array of legal texts to add to the Invoice in certain situations.
@@ -94,7 +96,10 @@ func (d *Document) newInvoice(invoice *bill.Invoice) *Invoice {
 		AdditionalData: newAdditionalData(invoice),
 		PaymentDetails: newPaymentDetails(invoice.Payment),
 		LegalLiterals:  newLegalLiterals(invoice),
-		Items:          newItems(invoice.Lines, invoice.Totals.Taxes, rate),
+		Items:          newItems(invoice.Lines, invoice.Ordering, invoice.Totals.Taxes, rate),
+	}
+	if c := receiverContract(invoice.Ordering, 0); c != nil {
+		xmlInvoice.InvoiceIssueData.ReceiverContractReference = c.Code.String()
 	}
 	if rate != nil {
 		xmlInvoice.InvoiceIssueData.TaxCurrencyCode = string(currency.EUR)
@@ -102,6 +107,20 @@ func (d *Document) newInvoice(invoice *bill.Invoice) *Invoice {
 	xmlInvoice.setTaxes(invoice.Totals.Taxes, rate)
 
 	return xmlInvoice
+}
+
+// receiverContract returns the first contract that covers the line with the
+// given index, or the whole invoice when the index is zero.
+func receiverContract(o *bill.Ordering, index int) *org.DocumentRef {
+	if o == nil {
+		return nil
+	}
+	for _, c := range o.Contracts {
+		if len(c.Lines) == 0 || slices.Contains(c.Lines, index) {
+			return c
+		}
+	}
+	return nil
 }
 
 // euroRate provides the rate that converts the invoice's amounts into euros,
